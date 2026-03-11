@@ -1,8 +1,8 @@
 {
-  "name": "json-editor",
+  "name": "devtools-online",
   "private": true,
-  "version": "1.0.0",
-  "description": "JSON Editor & Dev Tools Online — JSON, JWT, Base64, URL, Timestamp, UUID",
+  "version": "2.0.0",
+  "description": "DevTools Online — 12 бесплатных инструментов разработчика в браузере",
   "homepage": "https://alexkostromin.github.io/json_editor/",
   "type": "module",
   "scripts": {

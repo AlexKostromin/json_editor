@@ -27,8 +27,8 @@ const icons = {
 const header = document.createElement('header');
 header.innerHTML = `
   <div class="header-left">
-    <div class="logo-icon">{ }</div>
-    <h1>JSON <span>Editor</span></h1>
+    <div class="logo-icon">&lt;/&gt;</div>
+    <h1>Dev<span>Tools</span></h1>
     <div class="header-badge">Online</div>
   </div>
   <div class="header-right-section">
@@ -173,7 +173,7 @@ footer.className = 'app-footer';
 const visitCount = Number(localStorage.getItem('json-editor-visits') || '0') + 1;
 localStorage.setItem('json-editor-visits', String(visitCount));
 footer.innerHTML = `
-  <span>JSON Editor & Dev Tools</span>
+  <span>DevTools Online</span>
   <span class="footer-sep">·</span>
   <span>12 инструментов</span>
   <span class="footer-sep">·</span>
@@ -191,8 +191,8 @@ document.body.appendChild(counterImg);
 
 // ========== Sample data ==========
 const sampleJson = {
-  name: 'JSON Editor',
-  description: 'Онлайн-редактор JSON',
+  name: 'DevTools Online',
+  description: 'Онлайн инструменты для разработчика',
   version: '1.0.0',
   features: ['tree view', 'text mode', 'table mode', 'search', 'formatting'],
   author: { name: 'User', email: 'user@example.com' },

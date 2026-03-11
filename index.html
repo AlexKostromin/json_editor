@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- SEO -->
-    <title>JSON Editor & Dev Tools Online — JSON, JWT, Base64, URL, Timestamp, UUID</title>
-    <meta name="description" content="Бесплатные онлайн инструменты для разработчика: JSON редактор с форматированием и валидацией, JWT декодер, Base64 encode/decode, URL encode/decode, Unix Timestamp конвертер, UUID генератор. Всё работает в браузере без регистрации." />
-    <meta name="keywords" content="json editor, json formatter, json validator, json онлайн, jwt decoder, jwt парсер, base64 encode, base64 decode, url encode, url decode, unix timestamp converter, uuid generator, инструменты разработчика, dev tools online" />
+    <title>DevTools Online — JSON Editor, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color</title>
+    <meta name="description" content="Бесплатные онлайн инструменты для разработчика: JSON редактор, JWT декодер, Base64, URL encode/decode, Unix Timestamp, UUID, YAML↔JSON, JSON Schema, Hash SHA-256, Regex тестер, Color конвертер, JSON Diff, Mock данные. Всё в браузере." />
+    <meta name="keywords" content="dev tools online, json editor, json formatter, jwt decoder, base64 encode decode, url encode decode, unix timestamp converter, uuid generator, yaml to json, json schema generator, sha256 hash, regex tester, color converter hex rgb hsl, json diff, mock data, инструменты разработчика" />
     <meta name="author" content="AlexKostromin" />
     <meta name="robots" content="index, follow" />
     <meta name="google-site-verification" content="uVDFxjpX430_47fUIkmUBNptwT-pMtp14QgvtpgWs0w" />
@@ -17,24 +17,24 @@
     <!-- Open Graph (Facebook, Telegram, VK, Discord) -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://alexkostromin.github.io/json_editor/" />
-    <meta property="og:title" content="JSON Editor & Dev Tools Online" />
-    <meta property="og:description" content="JSON редактор, JWT декодер, Base64, URL encode/decode, Timestamp, UUID — бесплатные инструменты для разработчика прямо в браузере." />
-    <meta property="og:site_name" content="JSON Editor Online" />
+    <meta property="og:title" content="DevTools Online — 12 инструментов разработчика" />
+    <meta property="og:description" content="JSON редактор, JWT декодер, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock — бесплатно в браузере." />
+    <meta property="og:site_name" content="DevTools Online" />
     <meta property="og:locale" content="ru_RU" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="JSON Editor & Dev Tools Online" />
-    <meta name="twitter:description" content="JSON редактор, JWT декодер, Base64, URL, Timestamp, UUID — бесплатно в браузере." />
+    <meta name="twitter:title" content="DevTools Online — 12 инструментов разработчика" />
+    <meta name="twitter:description" content="JSON, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock — бесплатно в браузере." />
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "JSON Editor & Dev Tools Online",
+      "name": "DevTools Online",
       "url": "https://alexkostromin.github.io/json_editor/",
-      "description": "Бесплатные онлайн инструменты для разработчика: JSON редактор, JWT декодер, Base64, URL encode/decode, Unix Timestamp конвертер, UUID генератор.",
+      "description": "12 бесплатных онлайн инструментов для разработчика: JSON редактор, JWT декодер, Base64, URL, Timestamp, UUID, YAML, JSON Schema, Hash, Regex, Color, JSON Diff, Mock Data.",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Any",
       "offers": {
@@ -49,7 +49,14 @@
         "Base64 encode and decode",
         "URL encode and decode",
         "Unix Timestamp converter",
-        "UUID v4 generator"
+        "UUID v4 generator",
+        "YAML to JSON converter",
+        "JSON Schema generator",
+        "SHA-256/SHA-1/SHA-512 hash generator",
+        "Regex tester",
+        "Color converter HEX/RGB/HSL",
+        "JSON Diff comparison",
+        "Mock data generator"
       ],
       "inLanguage": ["ru", "en"],
       "browserRequirements": "Requires JavaScript",
@@ -57,13 +64,13 @@
     }
     </script>
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>{ }</text></svg>" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&lt;/&gt;</text></svg>" />
   </head>
   <body>
     <div id="app"></div>
     <noscript>
-      <h1>JSON Editor & Dev Tools Online</h1>
-      <p>Бесплатные онлайн инструменты для разработчика: JSON редактор, JWT декодер, Base64, URL encode/decode, Unix Timestamp конвертер, UUID генератор.</p>
+      <h1>DevTools Online — инструменты разработчика</h1>
+      <p>12 бесплатных онлайн инструментов: JSON редактор, JWT декодер, Base64, URL, Timestamp, UUID, YAML, JSON Schema, Hash, Regex, Color, JSON Diff, Mock Data.</p>
       <p>Для работы необходим JavaScript.</p>
     </noscript>
 
@@ -86,6 +93,27 @@
 
       <h2>UUID генератор</h2>
       <p>Генератор случайных UUID v4 онлайн. Создание уникальных идентификаторов для баз данных, API и тестирования.</p>
+
+      <h2>YAML ↔ JSON конвертер</h2>
+      <p>Конвертация YAML в JSON и обратно онлайн. Мгновенное преобразование конфигурационных файлов между форматами.</p>
+
+      <h2>JSON Schema генератор</h2>
+      <p>Автоматическая генерация JSON Schema из JSON данных. Определение типов, форматов (date-time, email, uri) и обязательных полей.</p>
+
+      <h2>Hash генератор — SHA-256, SHA-1, SHA-512</h2>
+      <p>Генерация хэшей SHA-256, SHA-1, SHA-384, SHA-512 онлайн. Хэширование текста через Web Crypto API прямо в браузере.</p>
+
+      <h2>Regex Tester — тест регулярных выражений</h2>
+      <p>Онлайн тестер регулярных выражений с поддержкой флагов g, i, m. Показывает все совпадения, группы и позиции.</p>
+
+      <h2>Color Converter — HEX, RGB, HSL</h2>
+      <p>Конвертер цветов между форматами HEX, RGB и HSL онлайн. Мгновенное преобразование цветовых значений для CSS.</p>
+
+      <h2>JSON Diff — сравнение JSON</h2>
+      <p>Сравнение двух JSON объектов онлайн. Глубокое рекурсивное сравнение с подсчётом добавленных, удалённых и изменённых полей.</p>
+
+      <h2>Mock Data Generator</h2>
+      <p>Генератор фейковых данных для тестирования. Создание пользователей с именами, email, телефонами, городами и другими полями.</p>
     </footer>
     <script type="module" src="/src/main.ts"></script>
   </body>
