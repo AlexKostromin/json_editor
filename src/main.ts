@@ -478,3 +478,10 @@ themeSwitch.addEventListener('change', () => {
   applyTheme(themeSwitch.checked);
   localStorage.setItem('json-editor-theme', themeSwitch.checked ? 'dark' : 'light');
 });
+
+// ========== PWA Service Worker ==========
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/json_editor/sw.js').catch(() => {});
+  });
+}

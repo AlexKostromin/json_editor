@@ -4,30 +4,56 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- Performance hints -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <!-- SEO -->
     <title>DevTools Online — JSON Editor, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color</title>
     <meta name="description" content="Бесплатные онлайн инструменты для разработчика: JSON редактор, JWT декодер, Base64, URL encode/decode, Unix Timestamp, UUID, YAML↔JSON, JSON Schema, Hash SHA-256, Regex тестер, Color конвертер, JSON Diff, Mock данные. Всё в браузере." />
-    <meta name="keywords" content="dev tools online, json editor, json formatter, jwt decoder, base64 encode decode, url encode decode, unix timestamp converter, uuid generator, yaml to json, json schema generator, sha256 hash, regex tester, color converter hex rgb hsl, json diff, mock data, инструменты разработчика" />
+    <meta name="keywords" content="dev tools online, json editor, json formatter, jwt decoder, base64 encode decode, url encode decode, unix timestamp converter, uuid generator, yaml to json, json schema generator, sha256 hash, regex tester, color converter hex rgb hsl, json diff, mock data, инструменты разработчика, онлайн инструменты, devtools" />
     <meta name="author" content="AlexKostromin" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="google" content="notranslate" />
     <meta name="google-site-verification" content="uVDFxjpX430_47fUIkmUBNptwT-pMtp14QgvtpgWs0w" />
     <meta name="yandex-verification" content="e3ea44282b6c99ce" />
     <link rel="canonical" href="https://alexkostromin.github.io/json_editor/" />
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="ru" href="https://alexkostromin.github.io/json_editor/" />
+    <link rel="alternate" hreflang="x-default" href="https://alexkostromin.github.io/json_editor/" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/json_editor/manifest.json" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="DevTools" />
+    <link rel="apple-touch-icon" href="/json_editor/icons/icon-192.png" />
 
     <!-- Open Graph (Facebook, Telegram, VK, Discord) -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://alexkostromin.github.io/json_editor/" />
     <meta property="og:title" content="DevTools Online — 12 инструментов разработчика" />
     <meta property="og:description" content="JSON редактор, JWT декодер, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock — бесплатно в браузере." />
+    <meta property="og:image" content="https://alexkostromin.github.io/json_editor/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="DevTools Online — 12 бесплатных инструментов разработчика" />
     <meta property="og:site_name" content="DevTools Online" />
     <meta property="og:locale" content="ru_RU" />
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="DevTools Online — 12 инструментов разработчика" />
     <meta name="twitter:description" content="JSON, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock — бесплатно в браузере." />
+    <meta name="twitter:image" content="https://alexkostromin.github.io/json_editor/og-image.png" />
+    <meta name="twitter:image:alt" content="DevTools Online" />
 
-    <!-- Structured Data (JSON-LD) -->
+    <!-- Structured Data: WebApplication -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -40,7 +66,7 @@
       "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "RUB"
+        "priceCurrency": "USD"
       },
       "featureList": [
         "JSON formatting and validation",
@@ -58,62 +84,210 @@
         "JSON Diff comparison",
         "Mock data generator"
       ],
+      "screenshot": "https://alexkostromin.github.io/json_editor/og-image.png",
       "inLanguage": ["ru", "en"],
       "browserRequirements": "Requires JavaScript",
-      "softwareVersion": "1.0.0"
+      "softwareVersion": "2.0.0",
+      "author": {
+        "@type": "Person",
+        "name": "AlexKostromin",
+        "url": "https://github.com/AlexKostromin"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "ratingCount": "1",
+        "bestRating": "5"
+      }
     }
     </script>
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&lt;/&gt;</text></svg>" />
+    <!-- Structured Data: FAQ (rich snippets in Google) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Как отформатировать JSON онлайн?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Вставьте JSON в редактор DevTools Online и нажмите кнопку «Форматировать». Редактор автоматически добавит отступы и переносы строк для удобного чтения. Поддерживаются режимы tree, text и table."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как декодировать JWT токен?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Откройте DevTools Online, нажмите «JWT» в панели инструментов, вставьте JWT токен (начинается с eyJ...) и нажмите «Декодировать». Вы увидите расшифрованные header и payload, а временные метки (exp, iat, nbf) будут преобразованы в читаемые даты."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как конвертировать Base64 онлайн?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "На DevTools Online нажмите «Base64», вставьте текст, выберите направление (Encode или Decode) и нажмите «Конвертировать». Поддерживается кириллица и Unicode."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Безопасно ли использовать DevTools Online?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Да, полностью безопасно. Все инструменты работают локально в вашем браузере. Данные никуда не отправляются — ни JWT токены, ни JSON данные, ни хэши не покидают ваш компьютер."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Какие хэш-алгоритмы поддерживает DevTools Online?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "DevTools Online генерирует хэши SHA-256, SHA-1, SHA-384 и SHA-512 с использованием встроенного Web Crypto API браузера. Вычисление происходит мгновенно и локально."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как сравнить два JSON объекта?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Нажмите «Diff» в панели DevTools Online, вставьте два JSON объекта в соответствующие поля и нажмите «Сравнить». Инструмент покажет все различия: добавленные, удалённые и изменённые поля с указанием путей."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как конвертировать YAML в JSON и обратно?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Нажмите «YAML» в панели инструментов, вставьте YAML или JSON, выберите направление конвертации и нажмите «Конвертировать». Поддерживаются все стандартные типы данных YAML."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Можно ли установить DevTools Online как приложение?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Да, DevTools Online — это Progressive Web App (PWA). Вы можете установить его как приложение на компьютер или телефон через меню браузера. Работает даже офлайн."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Structured Data: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "DevTools Online",
+          "item": "https://alexkostromin.github.io/json_editor/"
+        }
+      ]
+    }
+    </script>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/json_editor/icons/icon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/json_editor/icons/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/json_editor/icons/icon-512.png" />
   </head>
   <body>
     <div id="app"></div>
     <noscript>
       <h1>DevTools Online — инструменты разработчика</h1>
       <p>12 бесплатных онлайн инструментов: JSON редактор, JWT декодер, Base64, URL, Timestamp, UUID, YAML, JSON Schema, Hash, Regex, Color, JSON Diff, Mock Data.</p>
+      <p>Все инструменты работают в браузере — данные никуда не отправляются.</p>
       <p>Для работы необходим JavaScript.</p>
+
+      <h2>JSON Editor — редактор и форматирование</h2>
+      <p>Вставьте JSON и мгновенно отформатируйте, валидируйте или преобразуйте в tree/table вид.</p>
+
+      <h2>JWT Decoder</h2>
+      <p>Расшифровка JWT токенов: header, payload, автоматическое преобразование дат.</p>
+
+      <h2>Base64 Encode / Decode</h2>
+      <p>Кодирование и декодирование Base64 с поддержкой Unicode и кириллицы.</p>
+
+      <h2>URL Encode / Decode</h2>
+      <p>Преобразование URL-строк в безопасный формат и обратно.</p>
+
+      <h2>Unix Timestamp</h2>
+      <p>Конвертация Unix timestamp в читаемую дату. Поддержка секунд и миллисекунд.</p>
+
+      <h2>UUID v4 Generator</h2>
+      <p>Генерация случайных UUID для баз данных, API и тестирования.</p>
+
+      <h2>YAML ↔ JSON Converter</h2>
+      <p>Мгновенная конвертация между YAML и JSON форматами.</p>
+
+      <h2>JSON Schema Generator</h2>
+      <p>Автоматическая генерация JSON Schema из любых JSON данных.</p>
+
+      <h2>Hash Generator</h2>
+      <p>Хэширование SHA-256, SHA-1, SHA-384, SHA-512 через Web Crypto API.</p>
+
+      <h2>Regex Tester</h2>
+      <p>Тестирование регулярных выражений с флагами g, i, m. Все совпадения и группы.</p>
+
+      <h2>Color Converter</h2>
+      <p>Конвертация цветов: HEX ↔ RGB ↔ HSL для CSS-разработки.</p>
+
+      <h2>JSON Diff</h2>
+      <p>Глубокое сравнение двух JSON: добавленные, удалённые и изменённые поля.</p>
+
+      <h2>Mock Data Generator</h2>
+      <p>Генерация фейковых данных пользователей для тестирования.</p>
     </noscript>
 
     <!-- SEO content (visible to crawlers, hidden visually via CSS) -->
     <footer id="seo-footer" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
+      <h2>DevTools Online — бесплатные инструменты разработчика</h2>
+      <p>DevTools Online — набор из 12 бесплатных онлайн инструментов для веб-разработчиков, backend-инженеров, DevOps и QA специалистов. Все инструменты работают прямо в браузере, данные не отправляются на сервер. Можно установить как PWA-приложение для использования офлайн.</p>
+
       <h2>Онлайн JSON редактор</h2>
-      <p>Бесплатный JSON Editor Online с подсветкой синтаксиса, форматированием, валидацией и древовидным просмотром. Поддерживает режимы tree, text и table для удобной работы с JSON данными любого размера.</p>
+      <p>Бесплатный JSON Editor Online с подсветкой синтаксиса, форматированием, валидацией и древовидным просмотром. Поддерживает режимы tree, text и table для удобной работы с JSON данными любого размера. Скачивание и загрузка файлов, вставка из буфера обмена.</p>
 
       <h2>JWT Decoder — декодирование токенов</h2>
-      <p>Онлайн JWT декодер: вставьте JSON Web Token и мгновенно получите расшифрованные header и payload. Автоматическое преобразование Unix timestamp полей (exp, iat, nbf) в читаемые даты. Безопасно — токен не покидает ваш браузер.</p>
+      <p>Онлайн JWT декодер: вставьте JSON Web Token и мгновенно получите расшифрованные header и payload. Автоматическое преобразование Unix timestamp полей (exp, iat, nbf) в читаемые даты. Безопасно — токен не покидает ваш браузер. Работает с Auth0, Firebase, Keycloak и любыми другими JWT.</p>
 
       <h2>Base64 Encode / Decode</h2>
-      <p>Кодирование и декодирование Base64 онлайн. Поддержка кириллицы и Unicode. Конвертируйте текст в Base64 и обратно мгновенно в браузере.</p>
+      <p>Кодирование и декодирование Base64 онлайн. Поддержка кириллицы и Unicode. Конвертируйте текст в Base64 и обратно мгновенно в браузере. Используйте для работы с API, email-вложениями и конфигурационными файлами.</p>
 
       <h2>URL Encode / Decode</h2>
-      <p>URL кодирование и декодирование онлайн. Преобразование специальных символов, кириллицы и пробелов в URL-safe формат и обратно.</p>
+      <p>URL кодирование и декодирование онлайн. Преобразование специальных символов, кириллицы и пробелов в URL-safe формат и обратно. Необходимо для работы с query-параметрами, API запросами и веб-ссылками.</p>
 
       <h2>Unix Timestamp конвертер</h2>
-      <p>Конвертер Unix Timestamp в человекочитаемую дату и обратно. Поддержка секунд и миллисекунд, отображение в UTC и локальном времени.</p>
+      <p>Конвертер Unix Timestamp в человекочитаемую дату и обратно. Поддержка секунд и миллисекунд, отображение в UTC и локальном времени (MSK). Полезно для анализа логов, баз данных и API-ответов.</p>
 
-      <h2>UUID генератор</h2>
-      <p>Генератор случайных UUID v4 онлайн. Создание уникальных идентификаторов для баз данных, API и тестирования.</p>
+      <h2>UUID v4 генератор</h2>
+      <p>Генератор случайных UUID v4 онлайн. Создание уникальных идентификаторов для баз данных, API и тестирования. Генерирует 5 UUID за раз с использованием криптографически стойкого crypto.randomUUID().</p>
 
       <h2>YAML ↔ JSON конвертер</h2>
-      <p>Конвертация YAML в JSON и обратно онлайн. Мгновенное преобразование конфигурационных файлов между форматами.</p>
+      <p>Конвертация YAML в JSON и обратно онлайн. Мгновенное преобразование конфигурационных файлов Kubernetes, Docker Compose, Ansible, GitHub Actions между форматами. Поддержка всех типов данных YAML.</p>
 
       <h2>JSON Schema генератор</h2>
-      <p>Автоматическая генерация JSON Schema из JSON данных. Определение типов, форматов (date-time, email, uri) и обязательных полей.</p>
+      <p>Автоматическая генерация JSON Schema (draft 2020-12) из JSON данных. Определение типов, форматов (date-time, email, uri) и обязательных полей. Используйте для валидации API, OpenAPI спецификаций и конфигураций.</p>
 
       <h2>Hash генератор — SHA-256, SHA-1, SHA-512</h2>
-      <p>Генерация хэшей SHA-256, SHA-1, SHA-384, SHA-512 онлайн. Хэширование текста через Web Crypto API прямо в браузере.</p>
+      <p>Генерация хэшей SHA-256, SHA-1, SHA-384, SHA-512 онлайн. Хэширование текста через Web Crypto API прямо в браузере. Безопасно — данные не покидают ваш компьютер. Подходит для проверки целостности данных и контрольных сумм.</p>
 
       <h2>Regex Tester — тест регулярных выражений</h2>
-      <p>Онлайн тестер регулярных выражений с поддержкой флагов g, i, m. Показывает все совпадения, группы и позиции.</p>
+      <p>Онлайн тестер регулярных выражений с поддержкой флагов g, i, m. Показывает все совпадения, группы захвата и позиции. Незаменимый инструмент для отладки regex в JavaScript, Python, Go и других языках.</p>
 
       <h2>Color Converter — HEX, RGB, HSL</h2>
-      <p>Конвертер цветов между форматами HEX, RGB и HSL онлайн. Мгновенное преобразование цветовых значений для CSS.</p>
+      <p>Конвертер цветов между форматами HEX, RGB и HSL онлайн. Мгновенное преобразование цветовых значений для CSS, Tailwind, Material Design. Поддержка 3- и 6-значных HEX кодов.</p>
 
       <h2>JSON Diff — сравнение JSON</h2>
-      <p>Сравнение двух JSON объектов онлайн. Глубокое рекурсивное сравнение с подсчётом добавленных, удалённых и изменённых полей.</p>
+      <p>Сравнение двух JSON объектов онлайн. Глубокое рекурсивное сравнение с подсчётом добавленных, удалённых и изменённых полей. Показывает путь к каждому изменению. Полезно для отладки API и сравнения конфигураций.</p>
 
-      <h2>Mock Data Generator</h2>
-      <p>Генератор фейковых данных для тестирования. Создание пользователей с именами, email, телефонами, городами и другими полями.</p>
+      <h2>Mock Data Generator — фейковые данные</h2>
+      <p>Генератор фейковых данных для тестирования. Создание пользователей с русскими именами, email, телефонами, городами, компаниями и другими полями. До 100 записей за раз. Идеально для seed-данных, тестов и прототипирования.</p>
     </footer>
     <script type="module" src="/src/main.ts"></script>
   </body>

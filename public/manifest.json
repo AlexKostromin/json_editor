@@ -1,0 +1,45 @@
+{
+  "name": "DevTools Online — инструменты разработчика",
+  "short_name": "DevTools",
+  "description": "12 бесплатных онлайн инструментов: JSON Editor, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock Data",
+  "start_url": "/json_editor/",
+  "scope": "/json_editor/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "any",
+  "categories": ["developer", "utilities", "productivity"],
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "JWT Decoder",
+      "short_name": "JWT",
+      "url": "/json_editor/#jwt"
+    },
+    {
+      "name": "Base64 Encode/Decode",
+      "short_name": "Base64",
+      "url": "/json_editor/#base64"
+    },
+    {
+      "name": "UUID Generator",
+      "short_name": "UUID",
+      "url": "/json_editor/#uuid"
+    }
+  ]
+}
