@@ -1,0 +1,138 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #f5f5f5;
+  --header-bg: #ffffff;
+  --text: #333333;
+  --border: #e0e0e0;
+  --btn-bg: #ffffff;
+  --btn-hover: #e8e8e8;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] {
+  --bg: #1a1a2e;
+  --header-bg: #16213e;
+  --text: #e0e0e0;
+  --border: #2a2a4a;
+  --btn-bg: #1f2940;
+  --btn-hover: #2a3a5c;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  flex-shrink: 0;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.header-left h1 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--btn-bg);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+button:hover {
+  background: var(--btn-hover);
+  border-color: #999;
+}
+
+/* Theme toggle */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 8px;
+  user-select: none;
+}
+
+.theme-toggle input {
+  display: none;
+}
+
+.theme-toggle span {
+  font-size: 18px;
+}
+
+/* Editor */
+.editor-wrapper {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Make the jsoneditor fill the wrapper */
+.editor-wrapper .jse-main {
+  height: 100% !important;
+}
+
+/* Dark theme for jsoneditor */
+[data-theme="dark"] .jse-theme-default {
+  --jse-theme-color: #4a6fa5;
+  --jse-theme-color-highlight: #5a7fb5;
+  --jse-background-color: #1a1a2e;
+  --jse-panel-background: #16213e;
+  --jse-text-color: #e0e0e0;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  header {
+    padding: 8px 10px;
+  }
+
+  .header-left h1 {
+    font-size: 1rem;
+  }
+
+  button {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+}
