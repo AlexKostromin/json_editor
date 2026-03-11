@@ -13,6 +13,7 @@ const icons = {
   sample: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
   download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
   upload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+  jwt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
 };
 
 // ========== Header ==========
@@ -71,6 +72,12 @@ toolbar.innerHTML = `
       ${icons.clear}<span class="btn-label">Очистить</span>
     </button>
   </div>
+  <div class="divider"></div>
+  <div class="btn-group">
+    <button class="btn btn-jwt" id="btn-jwt" data-tooltip="Декодировать JWT токен">
+      ${icons.jwt}<span class="btn-label">JWT</span>
+    </button>
+  </div>
 `;
 app.appendChild(toolbar);
 
@@ -80,6 +87,21 @@ fileInput.type = 'file';
 fileInput.accept = '.json,application/json';
 fileInput.style.display = 'none';
 document.body.appendChild(fileInput);
+
+// JWT Modal
+const modal = document.createElement('div');
+modal.className = 'modal-overlay';
+modal.innerHTML = `
+  <div class="modal">
+    <h2>Декодировать JWT токен</h2>
+    <textarea id="jwt-input" placeholder="Вставьте JWT токен (eyJhbG...)..." rows="4"></textarea>
+    <div class="modal-buttons">
+      <button class="btn" id="jwt-cancel">Отмена</button>
+      <button class="btn btn-primary" id="jwt-decode">Декодировать</button>
+    </div>
+  </div>
+`;
+document.body.appendChild(modal);
 
 // Toast
 const toast = document.createElement('div');
@@ -233,6 +255,72 @@ document.getElementById('btn-download')!.addEventListener('click', () => {
   a.click();
   URL.revokeObjectURL(url);
   showToast('Файл скачан');
+});
+
+// JWT decode
+function decodeJwtPart(part: string): Record<string, unknown> {
+  const base64 = part.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = base64 + '='.repeat((4 - base64.length % 4) % 4);
+  const decoded = atob(padded);
+  return JSON.parse(decoded);
+}
+
+document.getElementById('btn-jwt')!.addEventListener('click', () => {
+  modal.classList.add('show');
+  const input = document.getElementById('jwt-input') as HTMLTextAreaElement;
+  input.value = '';
+  input.focus();
+});
+
+document.getElementById('jwt-cancel')!.addEventListener('click', () => {
+  modal.classList.remove('show');
+});
+
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) modal.classList.remove('show');
+});
+
+document.getElementById('jwt-decode')!.addEventListener('click', () => {
+  const input = document.getElementById('jwt-input') as HTMLTextAreaElement;
+  const token = input.value.trim();
+
+  if (!token) {
+    showToast('Вставьте JWT токен');
+    return;
+  }
+
+  const parts = token.split('.');
+  if (parts.length !== 3) {
+    showToast('Невалидный JWT: должно быть 3 части, разделённые точками');
+    return;
+  }
+
+  try {
+    const header = decodeJwtPart(parts[0]);
+    const payload = decodeJwtPart(parts[1]);
+
+    // Add human-readable dates for standard JWT time fields
+    const timeFields = ['exp', 'iat', 'nbf'] as const;
+    const payloadWithDates: Record<string, unknown> = { ...payload };
+    for (const field of timeFields) {
+      if (typeof payloadWithDates[field] === 'number') {
+        payloadWithDates[`${field}_readable`] = new Date((payloadWithDates[field] as number) * 1000).toLocaleString('ru-RU');
+      }
+    }
+
+    editor.set({
+      json: {
+        header,
+        payload: payloadWithDates,
+        signature: parts[2],
+      },
+    });
+
+    modal.classList.remove('show');
+    showToast('JWT токен декодирован');
+  } catch {
+    showToast('Ошибка декодирования JWT');
+  }
 });
 
 // ========== Theme ==========
