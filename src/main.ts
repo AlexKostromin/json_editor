@@ -22,6 +22,7 @@ header.innerHTML = `
   <div class="header-left">
     <div class="logo-icon">{ }</div>
     <h1>JSON <span>Editor</span></h1>
+    <div class="header-badge">JWT</div>
     <div class="header-badge">Online</div>
   </div>
   <div class="header-right-section">
