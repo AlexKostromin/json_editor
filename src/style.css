@@ -203,6 +203,18 @@ header {
   border-color: #334155;
 }
 
+.tool-chip.active {
+  background: rgba(96, 165, 250, 0.12);
+  color: #60a5fa;
+  border-color: rgba(96, 165, 250, 0.3);
+}
+
+.tool-chip.json.active {
+  background: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+  border-color: rgba(96, 165, 250, 0.4);
+}
+
 .tool-chip:active {
   transform: scale(0.96);
 }

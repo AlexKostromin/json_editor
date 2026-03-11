@@ -44,6 +44,8 @@ app.appendChild(header);
 const toolsBar = document.createElement('div');
 toolsBar.className = 'tools-bar';
 toolsBar.innerHTML = `
+  <button class="tool-chip json active" id="btn-json">{ }<span>JSON</span></button>
+  <div class="tools-sep"></div>
   <button class="tool-chip jwt" id="btn-jwt-header">${icons.jwt}<span>JWT</span></button>
   <button class="tool-chip base64" id="btn-base64">B64<span>Base64</span></button>
   <button class="tool-chip url" id="btn-url">%<span>URL</span></button>
@@ -219,6 +221,12 @@ function getTextContent(): string {
 function getFormattedContent(): string {
   return 'text' in content ? content.text : JSON.stringify(content.json, null, 2);
 }
+
+// ========== JSON Button (return to editor) ==========
+document.getElementById('btn-json')!.addEventListener('click', () => {
+  editor.set({ json: sampleJson });
+  showToast('JSON Editor');
+});
 
 // ========== JSON Button Handlers ==========
 
