@@ -32,73 +32,6 @@ header.innerHTML = `
     <div class="header-badge">Online</div>
   </div>
   <div class="header-right-section">
-    <div class="tools-dropdown">
-      <button class="header-tool-btn header-tools-toggle" id="tools-toggle">
-        Dev Tools ${icons.chevron}
-      </button>
-      <div class="tools-panel" id="tools-panel">
-        <button class="tool-item jwt" id="btn-jwt-header">
-          <span class="tool-icon">${icons.jwt}</span>
-          <span class="tool-name">JWT Decoder</span>
-          <span class="tool-desc">Декодирование токенов</span>
-        </button>
-        <button class="tool-item base64" id="btn-base64">
-          <span class="tool-icon">B64</span>
-          <span class="tool-name">Base64</span>
-          <span class="tool-desc">Encode / Decode</span>
-        </button>
-        <button class="tool-item url" id="btn-url">
-          <span class="tool-icon">URL</span>
-          <span class="tool-name">URL Encode</span>
-          <span class="tool-desc">Encode / Decode</span>
-        </button>
-        <button class="tool-item timestamp" id="btn-timestamp">
-          <span class="tool-icon">TS</span>
-          <span class="tool-name">Timestamp</span>
-          <span class="tool-desc">Unix время в дату</span>
-        </button>
-        <button class="tool-item uuid" id="btn-uuid">
-          <span class="tool-icon">ID</span>
-          <span class="tool-name">UUID v4</span>
-          <span class="tool-desc">Генерация UUID</span>
-        </button>
-        <button class="tool-item yaml" id="btn-yaml">
-          <span class="tool-icon">YML</span>
-          <span class="tool-name">YAML ↔ JSON</span>
-          <span class="tool-desc">Конвертер форматов</span>
-        </button>
-        <button class="tool-item schema" id="btn-schema">
-          <span class="tool-icon">{ }</span>
-          <span class="tool-name">JSON Schema</span>
-          <span class="tool-desc">Генерация схемы</span>
-        </button>
-        <button class="tool-item hash" id="btn-hash">
-          <span class="tool-icon">#</span>
-          <span class="tool-name">Hash</span>
-          <span class="tool-desc">SHA-256, SHA-1, SHA-512</span>
-        </button>
-        <button class="tool-item regex" id="btn-regex">
-          <span class="tool-icon">.*</span>
-          <span class="tool-name">Regex Tester</span>
-          <span class="tool-desc">Тест регулярных выражений</span>
-        </button>
-        <button class="tool-item color" id="btn-color">
-          <span class="tool-icon" style="color:#f87171">●</span>
-          <span class="tool-name">Color Converter</span>
-          <span class="tool-desc">HEX / RGB / HSL</span>
-        </button>
-        <button class="tool-item diff" id="btn-diff">
-          <span class="tool-icon">≠</span>
-          <span class="tool-name">JSON Diff</span>
-          <span class="tool-desc">Сравнение двух JSON</span>
-        </button>
-        <button class="tool-item mock" id="btn-mock">
-          <span class="tool-icon">👤</span>
-          <span class="tool-name">Mock Data</span>
-          <span class="tool-desc">Фейковые данные</span>
-        </button>
-      </div>
-    </div>
     <label class="theme-btn" title="Переключить тему">
       <input type="checkbox" id="theme-switch" />
       <span id="theme-icon">☀️</span>
@@ -107,19 +40,25 @@ header.innerHTML = `
 `;
 app.appendChild(header);
 
-// Tools dropdown toggle
-const toolsToggle = document.getElementById('tools-toggle')!;
-const toolsPanel = document.getElementById('tools-panel')!;
-
-toolsToggle.addEventListener('click', () => {
-  toolsPanel.classList.toggle('open');
-});
-
-document.addEventListener('click', (e) => {
-  if (!(e.target as Element).closest('.tools-dropdown')) {
-    toolsPanel.classList.remove('open');
-  }
-});
+// ========== Tools Bar ==========
+const toolsBar = document.createElement('div');
+toolsBar.className = 'tools-bar';
+toolsBar.innerHTML = `
+  <button class="tool-chip jwt" id="btn-jwt-header">${icons.jwt}<span>JWT</span></button>
+  <button class="tool-chip base64" id="btn-base64">B64<span>Base64</span></button>
+  <button class="tool-chip url" id="btn-url">%<span>URL</span></button>
+  <button class="tool-chip timestamp" id="btn-timestamp">⏱<span>Timestamp</span></button>
+  <button class="tool-chip uuid" id="btn-uuid">ID<span>UUID</span></button>
+  <div class="tools-sep"></div>
+  <button class="tool-chip yaml" id="btn-yaml">YML<span>YAML</span></button>
+  <button class="tool-chip schema" id="btn-schema">{ }<span>Schema</span></button>
+  <button class="tool-chip hash" id="btn-hash">#<span>Hash</span></button>
+  <button class="tool-chip regex" id="btn-regex">.*<span>Regex</span></button>
+  <button class="tool-chip color" id="btn-color">●<span>Color</span></button>
+  <button class="tool-chip diff" id="btn-diff">≠<span>Diff</span></button>
+  <button class="tool-chip mock" id="btn-mock">⊞<span>Mock</span></button>
+`;
+app.appendChild(toolsBar);
 
 // ========== Toolbar ==========
 const toolbar = document.createElement('div');
@@ -197,7 +136,6 @@ function openModal(title: string, bodyHtml: string, actionLabel: string, handler
   modalAction.textContent = actionLabel;
   currentModalHandler = handler;
   modal.classList.add('show');
-  toolsPanel.classList.remove('open');
   const firstInput = modalBody.querySelector('textarea, input') as HTMLElement | null;
   if (firstInput) setTimeout(() => firstInput.focus(), 50);
 }
@@ -402,7 +340,6 @@ document.getElementById('btn-timestamp')!.addEventListener('click', () => {
 
 // UUID
 document.getElementById('btn-uuid')!.addEventListener('click', () => {
-  toolsPanel.classList.remove('open');
   const uuids = generateUUIDs(5);
   editor.set({ json: { generated: uuids, count: uuids.length, version: 'v4 (random)' } });
   showToast('5 UUID сгенерировано');
@@ -435,7 +372,6 @@ document.getElementById('btn-yaml')!.addEventListener('click', () => {
 
 // JSON Schema
 document.getElementById('btn-schema')!.addEventListener('click', () => {
-  toolsPanel.classList.remove('open');
   try {
     const schema = generateJsonSchema(getTextContent());
     editor.set({ json: schema });

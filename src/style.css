@@ -148,131 +148,78 @@ header {
   display: none;
 }
 
-/* ========== Tools Dropdown ========== */
-.tools-dropdown {
-  position: relative;
+/* ========== Tools Bar ========== */
+.tools-bar {
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
+  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.header-tools-toggle {
+.tools-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.tools-sep {
+  width: 1px;
+  height: 22px;
+  background: #1e293b;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.tool-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #cbd5e1;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-  letter-spacing: 0.3px;
-}
-
-.header-tools-toggle svg {
-  width: 14px;
-  height: 14px;
-  transition: transform 0.2s ease;
-}
-
-.header-tools-toggle:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.25);
-}
-
-.tools-panel {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  width: 380px;
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
-  padding: 8px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4px;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-8px);
-  transition: all 0.2s ease;
-  z-index: 100;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
-}
-
-.tools-panel.open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.tool-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border: none;
-  border-radius: 8px;
+  gap: 5px;
+  padding: 5px 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
   background: transparent;
-  color: #e2e8f0;
+  color: #94a3b8;
   font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.12s ease;
-  text-align: left;
-}
-
-.tool-item:hover {
-  background: #334155;
-}
-
-.tool-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
+  white-space: nowrap;
   flex-shrink: 0;
-  background: rgba(96, 165, 250, 0.12);
-  color: #60a5fa;
 }
 
-.tool-icon svg {
-  width: 16px;
-  height: 16px;
+.tool-chip svg {
+  width: 14px;
+  height: 14px;
 }
 
-/* Tool-specific icon colors */
-.tool-item.jwt .tool-icon { background: rgba(251, 191, 36, 0.12); color: #fbbf24; }
-.tool-item.base64 .tool-icon { background: rgba(167, 139, 250, 0.12); color: #a78bfa; }
-.tool-item.url .tool-icon { background: rgba(52, 211, 153, 0.12); color: #34d399; }
-.tool-item.timestamp .tool-icon { background: rgba(96, 165, 250, 0.12); color: #60a5fa; }
-.tool-item.uuid .tool-icon { background: rgba(251, 146, 60, 0.12); color: #fb923c; }
-.tool-item.yaml .tool-icon { background: rgba(244, 114, 182, 0.12); color: #f472b6; }
-.tool-item.schema .tool-icon { background: rgba(45, 212, 191, 0.12); color: #2dd4bf; }
-.tool-item.hash .tool-icon { background: rgba(148, 163, 184, 0.12); color: #94a3b8; }
-.tool-item.regex .tool-icon { background: rgba(251, 113, 133, 0.12); color: #fb7185; }
-.tool-item.color .tool-icon { background: rgba(248, 113, 113, 0.12); color: #f87171; }
-.tool-item.diff .tool-icon { background: rgba(129, 140, 248, 0.12); color: #818cf8; }
-.tool-item.mock .tool-icon { background: rgba(74, 222, 128, 0.12); color: #4ade80; }
-
-.tool-name {
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.2;
-  display: block;
+.tool-chip:hover {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-color: #334155;
 }
 
-.tool-desc {
-  font-size: 11px;
-  color: #64748b;
-  line-height: 1.2;
-  display: block;
+.tool-chip:active {
+  transform: scale(0.96);
 }
+
+/* Tool chip accent colors on hover */
+.tool-chip.jwt:hover { color: #fbbf24; border-color: rgba(251, 191, 36, 0.3); background: rgba(251, 191, 36, 0.08); }
+.tool-chip.base64:hover { color: #a78bfa; border-color: rgba(167, 139, 250, 0.3); background: rgba(167, 139, 250, 0.08); }
+.tool-chip.url:hover { color: #34d399; border-color: rgba(52, 211, 153, 0.3); background: rgba(52, 211, 153, 0.08); }
+.tool-chip.timestamp:hover { color: #60a5fa; border-color: rgba(96, 165, 250, 0.3); background: rgba(96, 165, 250, 0.08); }
+.tool-chip.uuid:hover { color: #fb923c; border-color: rgba(251, 146, 60, 0.3); background: rgba(251, 146, 60, 0.08); }
+.tool-chip.yaml:hover { color: #f472b6; border-color: rgba(244, 114, 182, 0.3); background: rgba(244, 114, 182, 0.08); }
+.tool-chip.schema:hover { color: #2dd4bf; border-color: rgba(45, 212, 191, 0.3); background: rgba(45, 212, 191, 0.08); }
+.tool-chip.hash:hover { color: #cbd5e1; border-color: rgba(203, 213, 225, 0.3); background: rgba(203, 213, 225, 0.08); }
+.tool-chip.regex:hover { color: #fb7185; border-color: rgba(251, 113, 133, 0.3); background: rgba(251, 113, 133, 0.08); }
+.tool-chip.color:hover { color: #f87171; border-color: rgba(248, 113, 113, 0.3); background: rgba(248, 113, 113, 0.08); }
+.tool-chip.diff:hover { color: #818cf8; border-color: rgba(129, 140, 248, 0.3); background: rgba(129, 140, 248, 0.08); }
+.tool-chip.mock:hover { color: #4ade80; border-color: rgba(74, 222, 128, 0.3); background: rgba(74, 222, 128, 0.08); }
 
 /* ========== Footer ========== */
 .app-footer {
@@ -701,15 +648,18 @@ div[class*="navigation-bar"] {
     display: none;
   }
 
-  .header-tools-toggle {
-    padding: 5px 10px;
+  .tools-bar {
+    padding: 4px 10px;
+    gap: 3px;
+  }
+
+  .tool-chip {
+    padding: 4px 8px;
     font-size: 11px;
   }
 
-  .tools-panel {
-    width: calc(100vw - 24px);
-    right: -12px;
-    grid-template-columns: 1fr;
+  .tool-chip span {
+    display: none;
   }
 
   .toolbar {
@@ -761,7 +711,4 @@ div[class*="navigation-bar"] {
     font-size: 0.85rem;
   }
 
-  .tools-panel {
-    grid-template-columns: 1fr;
-  }
 }
