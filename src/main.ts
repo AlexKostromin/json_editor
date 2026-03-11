@@ -246,10 +246,9 @@ function applyTheme(dark: boolean) {
 }
 
 const savedTheme = localStorage.getItem('json-editor-theme');
-if (savedTheme === 'dark') {
-  themeSwitch.checked = true;
-  applyTheme(true);
-}
+const isDark = savedTheme !== 'light';
+themeSwitch.checked = isDark;
+applyTheme(isDark);
 
 themeSwitch.addEventListener('change', () => {
   applyTheme(themeSwitch.checked);
