@@ -348,6 +348,11 @@ header {
   --jse-menu-separator: #334155 !important;
 }
 
+/* Hide navigation bar completely */
+.jse-navigation-bar {
+  display: none !important;
+}
+
 /* ========== Mobile ========== */
 @media (max-width: 768px) {
   header {
