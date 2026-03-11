@@ -214,14 +214,13 @@ header {
 }
 
 .toolbar .btn-primary {
-  background: var(--accent);
-  color: #fff;
+  background: #334155;
+  color: #e2e8f0;
 }
 
 .toolbar .btn-primary:hover {
-  background: var(--accent-hover);
+  background: #475569;
   color: #fff;
-  box-shadow: 0 2px 10px var(--accent-glow);
 }
 
 .toolbar .btn-primary svg {
@@ -340,6 +339,13 @@ header {
   --jse-modal-background: #1e293b !important;
   --jse-modal-overlay-background: rgba(0, 0, 0, 0.5) !important;
   --jse-modal-code-background: #0f172a !important;
+  --jse-menu-background: #0f172a !important;
+  --jse-menu-border: #334155 !important;
+  --jse-menu-button-background: transparent !important;
+  --jse-menu-button-background-highlight: #334155 !important;
+  --jse-menu-button-color: #94a3b8 !important;
+  --jse-menu-button-color-highlight: #e2e8f0 !important;
+  --jse-menu-separator: #334155 !important;
 }
 
 /* ========== Mobile ========== */
