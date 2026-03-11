@@ -22,10 +22,12 @@ header.innerHTML = `
   <div class="header-left">
     <div class="logo-icon">{ }</div>
     <h1>JSON <span>Editor</span></h1>
-    <div class="header-badge">JWT</div>
     <div class="header-badge">Online</div>
   </div>
   <div class="header-right-section">
+    <button class="header-jwt-btn" id="btn-jwt-header">
+      ${icons.jwt}<span>JWT Decoder</span>
+    </button>
     <label class="theme-btn" title="Переключить тему">
       <input type="checkbox" id="theme-switch" />
       <span id="theme-icon">☀️</span>
@@ -71,12 +73,6 @@ toolbar.innerHTML = `
     </button>
     <button class="btn btn-danger" id="btn-clear" data-tooltip="Очистить редактор">
       ${icons.clear}<span class="btn-label">Очистить</span>
-    </button>
-  </div>
-  <div class="divider"></div>
-  <div class="btn-group">
-    <button class="btn btn-jwt" id="btn-jwt" data-tooltip="Декодировать JWT токен">
-      ${icons.jwt}<span class="btn-label">JWT</span>
     </button>
   </div>
 `;
@@ -266,7 +262,7 @@ function decodeJwtPart(part: string): Record<string, unknown> {
   return JSON.parse(decoded);
 }
 
-document.getElementById('btn-jwt')!.addEventListener('click', () => {
+document.getElementById('btn-jwt-header')!.addEventListener('click', () => {
   modal.classList.add('show');
   const input = document.getElementById('jwt-input') as HTMLTextAreaElement;
   input.value = '';
