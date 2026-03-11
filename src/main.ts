@@ -122,6 +122,7 @@ let content: { json: unknown } | { text: string } = {
 
 const editorProps: JSONEditorPropsOptional = {
   content,
+  navigationBar: false,
   onChange: (updatedContent) => {
     content = updatedContent as typeof content;
   },
