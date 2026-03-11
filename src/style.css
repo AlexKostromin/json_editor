@@ -348,6 +348,12 @@ header {
   --jse-menu-separator: #334155 !important;
 }
 
+/* Hide context menu button on tree items */
+.jse-context-menu-button,
+[class*="context-menu-button"] {
+  display: none !important;
+}
+
 /* Hide navigation bar completely */
 .jse-navigation-bar,
 [class*="navigation-bar"] {
