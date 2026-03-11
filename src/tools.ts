@@ -21,12 +21,12 @@ export function urlDecode(input: string): string {
 // ========== Unix Timestamp ==========
 export function timestampToDate(ts: string): string {
   const num = Number(ts.trim());
-  if (isNaN(num)) throw new Error('Невалидный timestamp');
+  if (isNaN(num)) throw new Error('Invalid timestamp');
   const ms = num > 1e12 ? num : num * 1000;
   const d = new Date(ms);
   return JSON.stringify({
     utc: d.toUTCString(),
-    local: d.toLocaleString('ru-RU'),
+    local: d.toLocaleString('en-US'),
     iso: d.toISOString(),
     timestamp_sec: Math.floor(ms / 1000),
     timestamp_ms: ms,
@@ -37,7 +37,7 @@ export function dateToTimestamp(): string {
   const now = new Date();
   return JSON.stringify({
     now_utc: now.toUTCString(),
-    now_local: now.toLocaleString('ru-RU'),
+    now_local: now.toLocaleString('en-US'),
     now_iso: now.toISOString(),
     timestamp_sec: Math.floor(now.getTime() / 1000),
     timestamp_ms: now.getTime(),
@@ -56,7 +56,7 @@ export function generateUUIDs(count: number = 5): string[] {
 // ========== JWT ==========
 export function decodeJwt(token: string): { header: Record<string, unknown>; payload: Record<string, unknown>; signature: string } {
   const parts = token.trim().split('.');
-  if (parts.length !== 3) throw new Error('Невалидный JWT: должно быть 3 части');
+  if (parts.length !== 3) throw new Error('Invalid JWT: must have 3 parts');
 
   const decodeBase64 = (part: string) => {
     const base64 = part.replace(/-/g, '+').replace(/_/g, '/');
@@ -70,7 +70,7 @@ export function decodeJwt(token: string): { header: Record<string, unknown>; pay
   const timeFields = ['exp', 'iat', 'nbf'];
   for (const field of timeFields) {
     if (typeof payload[field] === 'number') {
-      payload[`${field}_readable`] = new Date(payload[field] * 1000).toLocaleString('ru-RU');
+      payload[`${field}_readable`] = new Date(payload[field] * 1000).toLocaleString('en-US');
     }
   }
 
@@ -232,7 +232,7 @@ export function convertColor(input: string): Record<string, string> {
       b = Math.round(hue2rgb(p, q, h - 1 / 3) * 255);
     }
   } else {
-    throw new Error('Неизвестный формат. Используйте HEX (#ff0000), RGB (rgb(255,0,0)) или HSL (hsl(0,100%,50%))');
+    throw new Error('Unknown format. Use HEX (#ff0000), RGB (rgb(255,0,0)) or HSL (hsl(0,100%,50%))');
   }
 
   // RGB -> HSL
@@ -324,11 +324,11 @@ export function jsonDiff(json1Str: string, json2Str: string): Record<string, unk
 }
 
 // ========== Mock Data Generator ==========
-const firstNames = ['Иван', 'Мария', 'Алексей', 'Елена', 'Дмитрий', 'Анна', 'Сергей', 'Ольга', 'Андрей', 'Наталья', 'Михаил', 'Татьяна', 'Павел', 'Юлия', 'Николай'];
-const lastNames = ['Иванов', 'Петров', 'Сидоров', 'Козлов', 'Новиков', 'Морозов', 'Волков', 'Соколов', 'Лебедев', 'Кузнецов', 'Попов', 'Смирнов', 'Егоров', 'Фёдоров', 'Павлов'];
-const domains = ['gmail.com', 'yandex.ru', 'mail.ru', 'outlook.com', 'proton.me'];
-const cities = ['Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург', 'Казань', 'Нижний Новгород', 'Самара', 'Ростов-на-Дону', 'Уфа', 'Красноярск'];
-const companies = ['ООО «Технологии»', 'ЗАО «Инновации»', 'ИП Сидоров', 'ООО «ДатаСофт»', 'АО «КлаудТех»', 'ООО «ВебСервис»', 'ЗАО «АйТиГрупп»'];
+const firstNames = ['James', 'Mary', 'John', 'Sarah', 'Robert', 'Emma', 'Michael', 'Olivia', 'William', 'Emily', 'David', 'Jessica', 'Daniel', 'Sophie', 'Thomas'];
+const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris'];
+const domains = ['gmail.com', 'yahoo.com', 'outlook.com', 'proton.me', 'icloud.com'];
+const cities = ['New York', 'London', 'San Francisco', 'Berlin', 'Tokyo', 'Sydney', 'Toronto', 'Amsterdam', 'Singapore', 'Paris'];
+const companies = ['Acme Corp', 'TechFlow Inc', 'DataSoft LLC', 'CloudPeak', 'WebForge', 'DevStack Ltd', 'ByteWorks'];
 const jobTitles = ['Frontend Developer', 'Backend Developer', 'DevOps Engineer', 'Product Manager', 'QA Engineer', 'Data Analyst', 'Team Lead', 'CTO', 'Designer', 'Fullstack Developer'];
 
 function pick<T>(arr: T[]): T {
@@ -340,7 +340,7 @@ function randomInt(min: number, max: number): number {
 }
 
 function randomPhone(): string {
-  return `+7 (${randomInt(900, 999)}) ${randomInt(100, 999)}-${randomInt(10, 99)}-${randomInt(10, 99)}`;
+  return `+1 (${randomInt(200, 999)}) ${randomInt(100, 999)}-${randomInt(1000, 9999)}`;
 }
 
 function randomDate(from: Date, to: Date): string {
@@ -356,7 +356,7 @@ export function generateMockUsers(count: number): Record<string, unknown>[] {
   return Array.from({ length: count }, (_, i) => {
     const firstName = pick(firstNames);
     const lastName = pick(lastNames);
-    const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@${pick(domains)}`.replace(/ё/g, 'е');
+    const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@${pick(domains)}`;
     return {
       id: i + 1,
       first_name: firstName,

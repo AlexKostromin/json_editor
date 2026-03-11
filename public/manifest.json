@@ -1,7 +1,7 @@
 {
-  "name": "DevTools Online — инструменты разработчика",
+  "name": "DevTools Online — Developer Tools",
   "short_name": "DevTools",
-  "description": "12 бесплатных онлайн инструментов: JSON Editor, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock Data",
+  "description": "12 free online tools: JSON Editor, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock Data",
   "start_url": "/json_editor/",
   "scope": "/json_editor/",
   "display": "standalone",
@@ -9,7 +9,7 @@
   "theme_color": "#0f172a",
   "orientation": "any",
   "categories": ["developer", "utilities", "productivity"],
-  "lang": "ru",
+  "lang": "en",
   "icons": [
     {
       "src": "icons/icon-192.png",
