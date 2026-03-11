@@ -148,18 +148,18 @@ header {
   display: none;
 }
 
-/* ========== Header JWT Button ========== */
-.header-jwt-btn {
+/* ========== Header Tool Buttons ========== */
+.header-tool-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
-  border: 1px solid rgba(251, 191, 36, 0.3);
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
-  background: rgba(251, 191, 36, 0.1);
-  color: #fbbf24;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -167,19 +167,69 @@ header {
   letter-spacing: 0.3px;
 }
 
-.header-jwt-btn svg {
-  width: 18px;
-  height: 18px;
+.header-tool-btn svg {
+  width: 16px;
+  height: 16px;
 }
 
+.header-tool-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.header-tool-btn:active {
+  transform: scale(0.97);
+}
+
+/* Individual tool button colors */
+.header-jwt-btn {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.25);
+  background: rgba(251, 191, 36, 0.1);
+}
 .header-jwt-btn:hover {
   background: rgba(251, 191, 36, 0.2);
-  border-color: rgba(251, 191, 36, 0.5);
-  box-shadow: 0 2px 12px rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.4);
 }
 
-.header-jwt-btn:active {
-  transform: scale(0.97);
+.header-base64-btn {
+  color: #a78bfa;
+  border-color: rgba(167, 139, 250, 0.25);
+  background: rgba(167, 139, 250, 0.1);
+}
+.header-base64-btn:hover {
+  background: rgba(167, 139, 250, 0.2);
+  border-color: rgba(167, 139, 250, 0.4);
+}
+
+.header-url-btn {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.25);
+  background: rgba(52, 211, 153, 0.1);
+}
+.header-url-btn:hover {
+  background: rgba(52, 211, 153, 0.2);
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.header-timestamp-btn {
+  color: #60a5fa;
+  border-color: rgba(96, 165, 250, 0.25);
+  background: rgba(96, 165, 250, 0.1);
+}
+.header-timestamp-btn:hover {
+  background: rgba(96, 165, 250, 0.2);
+  border-color: rgba(96, 165, 250, 0.4);
+}
+
+.header-uuid-btn {
+  color: #fb923c;
+  border-color: rgba(251, 146, 60, 0.25);
+  background: rgba(251, 146, 60, 0.1);
+}
+.header-uuid-btn:hover {
+  background: rgba(251, 146, 60, 0.2);
+  border-color: rgba(251, 146, 60, 0.4);
 }
 
 /* ========== Toolbar ========== */
@@ -419,6 +469,26 @@ header {
   background: #2b6de0;
 }
 
+.modal-radio-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.modal-radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.modal-radio-group input[type="radio"] {
+  accent-color: #3883fa;
+}
+
 /* ========== Editor ========== */
 .editor-wrapper {
   flex: 1;
@@ -522,13 +592,9 @@ div[class*="navigation-bar"] {
     display: none;
   }
 
-  .header-jwt-btn {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-
-  .header-jwt-btn span {
-    display: none;
+  .header-tool-btn {
+    padding: 5px 10px;
+    font-size: 11px;
   }
 
   .toolbar {

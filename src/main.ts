@@ -1,4 +1,5 @@
 import { createJSONEditor, type JSONEditorPropsOptional } from 'vanilla-jsoneditor';
+import { base64Encode, base64Decode, urlEncode, urlDecode, timestampToDate, dateToTimestamp, generateUUIDs, decodeJwt } from './tools';
 import './style.css';
 
 const app = document.getElementById('app')!;
@@ -14,6 +15,7 @@ const icons = {
   download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
   upload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
   jwt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+  tools: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
 };
 
 // ========== Header ==========
@@ -25,8 +27,20 @@ header.innerHTML = `
     <div class="header-badge">Online</div>
   </div>
   <div class="header-right-section">
-    <button class="header-jwt-btn" id="btn-jwt-header">
-      ${icons.jwt}<span>JWT Decoder</span>
+    <button class="header-tool-btn header-jwt-btn" id="btn-jwt-header">
+      ${icons.jwt}<span>JWT</span>
+    </button>
+    <button class="header-tool-btn header-base64-btn" id="btn-base64">
+      <span>B64</span>
+    </button>
+    <button class="header-tool-btn header-url-btn" id="btn-url">
+      <span>URL</span>
+    </button>
+    <button class="header-tool-btn header-timestamp-btn" id="btn-timestamp">
+      <span>Time</span>
+    </button>
+    <button class="header-tool-btn header-uuid-btn" id="btn-uuid">
+      <span>UUID</span>
     </button>
     <label class="theme-btn" title="Переключить тему">
       <input type="checkbox" id="theme-switch" />
@@ -85,20 +99,45 @@ fileInput.accept = '.json,application/json';
 fileInput.style.display = 'none';
 document.body.appendChild(fileInput);
 
-// JWT Modal
+// ========== Universal Modal ==========
 const modal = document.createElement('div');
 modal.className = 'modal-overlay';
 modal.innerHTML = `
   <div class="modal">
-    <h2>Декодировать JWT токен</h2>
-    <textarea id="jwt-input" placeholder="Вставьте JWT токен (eyJhbG...)..." rows="4"></textarea>
+    <h2 id="modal-title"></h2>
+    <div id="modal-body"></div>
     <div class="modal-buttons">
-      <button class="btn" id="jwt-cancel">Отмена</button>
-      <button class="btn btn-primary" id="jwt-decode">Декодировать</button>
+      <button class="btn" id="modal-cancel">Отмена</button>
+      <button class="btn btn-primary" id="modal-action"></button>
     </div>
   </div>
 `;
 document.body.appendChild(modal);
+
+const modalTitle = document.getElementById('modal-title')!;
+const modalBody = document.getElementById('modal-body')!;
+const modalAction = document.getElementById('modal-action')!;
+
+let currentModalHandler: (() => void) | null = null;
+
+function openModal(title: string, bodyHtml: string, actionLabel: string, handler: () => void) {
+  modalTitle.textContent = title;
+  modalBody.innerHTML = bodyHtml;
+  modalAction.textContent = actionLabel;
+  currentModalHandler = handler;
+  modal.classList.add('show');
+  const firstInput = modalBody.querySelector('textarea, input') as HTMLElement | null;
+  if (firstInput) setTimeout(() => firstInput.focus(), 50);
+}
+
+function closeModal() {
+  modal.classList.remove('show');
+  currentModalHandler = null;
+}
+
+document.getElementById('modal-cancel')!.addEventListener('click', closeModal);
+modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+modalAction.addEventListener('click', () => { if (currentModalHandler) currentModalHandler(); });
 
 // Toast
 const toast = document.createElement('div');
@@ -164,7 +203,7 @@ function getFormattedContent(): string {
   return 'text' in content ? content.text : JSON.stringify(content.json, null, 2);
 }
 
-// ========== Button Handlers ==========
+// ========== JSON Button Handlers ==========
 
 document.getElementById('btn-format')!.addEventListener('click', () => {
   try {
@@ -254,70 +293,112 @@ document.getElementById('btn-download')!.addEventListener('click', () => {
   showToast('Файл скачан');
 });
 
-// JWT decode
-function decodeJwtPart(part: string): Record<string, unknown> {
-  const base64 = part.replace(/-/g, '+').replace(/_/g, '/');
-  const padded = base64 + '='.repeat((4 - base64.length % 4) % 4);
-  const decoded = atob(padded);
-  return JSON.parse(decoded);
-}
+// ========== Tool Handlers ==========
 
+// JWT
 document.getElementById('btn-jwt-header')!.addEventListener('click', () => {
-  modal.classList.add('show');
-  const input = document.getElementById('jwt-input') as HTMLTextAreaElement;
-  input.value = '';
-  input.focus();
-});
-
-document.getElementById('jwt-cancel')!.addEventListener('click', () => {
-  modal.classList.remove('show');
-});
-
-modal.addEventListener('click', (e) => {
-  if (e.target === modal) modal.classList.remove('show');
-});
-
-document.getElementById('jwt-decode')!.addEventListener('click', () => {
-  const input = document.getElementById('jwt-input') as HTMLTextAreaElement;
-  const token = input.value.trim();
-
-  if (!token) {
-    showToast('Вставьте JWT токен');
-    return;
-  }
-
-  const parts = token.split('.');
-  if (parts.length !== 3) {
-    showToast('Невалидный JWT: должно быть 3 части, разделённые точками');
-    return;
-  }
-
-  try {
-    const header = decodeJwtPart(parts[0]);
-    const payload = decodeJwtPart(parts[1]);
-
-    // Add human-readable dates for standard JWT time fields
-    const timeFields = ['exp', 'iat', 'nbf'] as const;
-    const payloadWithDates: Record<string, unknown> = { ...payload };
-    for (const field of timeFields) {
-      if (typeof payloadWithDates[field] === 'number') {
-        payloadWithDates[`${field}_readable`] = new Date((payloadWithDates[field] as number) * 1000).toLocaleString('ru-RU');
+  openModal(
+    'Декодировать JWT токен',
+    '<textarea id="tool-input" placeholder="Вставьте JWT токен (eyJhbG...)..." rows="4"></textarea>',
+    'Декодировать',
+    () => {
+      const input = (document.getElementById('tool-input') as HTMLTextAreaElement).value.trim();
+      if (!input) { showToast('Вставьте JWT токен'); return; }
+      try {
+        const result = decodeJwt(input);
+        editor.set({ json: result });
+        closeModal();
+        showToast('JWT токен декодирован');
+      } catch (e) {
+        showToast(e instanceof Error ? e.message : 'Ошибка декодирования JWT');
       }
     }
+  );
+});
 
-    editor.set({
-      json: {
-        header,
-        payload: payloadWithDates,
-        signature: parts[2],
-      },
-    });
+// Base64
+document.getElementById('btn-base64')!.addEventListener('click', () => {
+  openModal(
+    'Base64 Encode / Decode',
+    `<textarea id="tool-input" placeholder="Введите текст или Base64 строку..." rows="4"></textarea>
+     <div class="modal-radio-group">
+       <label><input type="radio" name="b64dir" value="encode" checked /> Encode</label>
+       <label><input type="radio" name="b64dir" value="decode" /> Decode</label>
+     </div>`,
+    'Конвертировать',
+    () => {
+      const input = (document.getElementById('tool-input') as HTMLTextAreaElement).value;
+      if (!input) { showToast('Введите текст'); return; }
+      const direction = (document.querySelector('input[name="b64dir"]:checked') as HTMLInputElement).value;
+      try {
+        const result = direction === 'encode' ? base64Encode(input) : base64Decode(input);
+        editor.set({ text: JSON.stringify({ input, direction, result }, null, 2) });
+        closeModal();
+        showToast(`Base64 ${direction === 'encode' ? 'закодировано' : 'декодировано'}`);
+      } catch {
+        showToast('Ошибка: невалидные данные');
+      }
+    }
+  );
+});
 
-    modal.classList.remove('show');
-    showToast('JWT токен декодирован');
-  } catch {
-    showToast('Ошибка декодирования JWT');
-  }
+// URL encode/decode
+document.getElementById('btn-url')!.addEventListener('click', () => {
+  openModal(
+    'URL Encode / Decode',
+    `<textarea id="tool-input" placeholder="Введите URL или текст..." rows="4"></textarea>
+     <div class="modal-radio-group">
+       <label><input type="radio" name="urldir" value="encode" checked /> Encode</label>
+       <label><input type="radio" name="urldir" value="decode" /> Decode</label>
+     </div>`,
+    'Конвертировать',
+    () => {
+      const input = (document.getElementById('tool-input') as HTMLTextAreaElement).value;
+      if (!input) { showToast('Введите текст'); return; }
+      const direction = (document.querySelector('input[name="urldir"]:checked') as HTMLInputElement).value;
+      try {
+        const result = direction === 'encode' ? urlEncode(input) : urlDecode(input);
+        editor.set({ text: JSON.stringify({ input, direction, result }, null, 2) });
+        closeModal();
+        showToast(`URL ${direction === 'encode' ? 'закодирован' : 'декодирован'}`);
+      } catch {
+        showToast('Ошибка: невалидные данные');
+      }
+    }
+  );
+});
+
+// Timestamp
+document.getElementById('btn-timestamp')!.addEventListener('click', () => {
+  openModal(
+    'Unix Timestamp конвертер',
+    `<textarea id="tool-input" placeholder="Введите Unix timestamp (например 1710000000)... Оставьте пустым для текущего времени" rows="2"></textarea>`,
+    'Конвертировать',
+    () => {
+      const input = (document.getElementById('tool-input') as HTMLTextAreaElement).value.trim();
+      try {
+        const result = input ? timestampToDate(input) : dateToTimestamp();
+        editor.set({ json: JSON.parse(result) });
+        closeModal();
+        showToast(input ? 'Timestamp конвертирован' : 'Текущее время');
+      } catch {
+        showToast('Ошибка: невалидный timestamp');
+      }
+    }
+  );
+});
+
+// UUID
+document.getElementById('btn-uuid')!.addEventListener('click', () => {
+  const uuids = generateUUIDs(5);
+  editor.set({
+    json: {
+      generated: uuids,
+      count: uuids.length,
+      version: 'v4 (random)',
+    },
+  });
+  showToast('5 UUID сгенерировано');
 });
 
 // ========== Theme ==========
