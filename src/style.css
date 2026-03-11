@@ -354,15 +354,20 @@ header {
   display: none !important;
 }
 
-/* Hide navigation bar completely */
+/* Hide navigation bar completely (Svelte hashed classes) */
 .jse-navigation-bar,
-[class*="navigation-bar"] {
+[class*="jse-navigation-bar"],
+[class*="navigation-bar-space"],
+div[class*="navigation-bar"] {
   display: none !important;
   height: 0 !important;
+  max-height: 0 !important;
   overflow: hidden !important;
   padding: 0 !important;
   margin: 0 !important;
   border: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
 }
 
 /* ========== Mobile ========== */

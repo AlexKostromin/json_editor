@@ -133,6 +133,8 @@ const editor = createJSONEditor({
   props: editorProps,
 });
 
+editor.updateProps({ navigationBar: false });
+
 // Helpers
 function getTextContent(): string {
   return 'text' in content ? content.text : JSON.stringify(content.json);
