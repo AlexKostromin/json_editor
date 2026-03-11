@@ -305,26 +305,41 @@ header {
 }
 
 /* ========== Always dark jsoneditor ========== */
-.jse-theme-default {
-  --jse-theme-color: #60a5fa;
-  --jse-theme-color-highlight: #93bbfd;
-  --jse-background-color: #1e293b;
-  --jse-panel-background: #1e293b;
-  --jse-text-color: #e2e8f0;
-  --jse-text-color-inverse: #0f172a;
-  --jse-main-border: none;
-  --jse-menu-color: #e2e8f0;
-  --jse-context-menu-background: #334155;
-  --jse-context-menu-color: #e2e8f0;
-  --jse-panel-border: #334155;
-  --jse-key-color: #7dd3fc;
-  --jse-value-color-string: #86efac;
-  --jse-value-color-number: #fca5a5;
-  --jse-value-color-boolean: #c4b5fd;
-  --jse-value-color-null: #94a3b8;
-  --jse-delimiter-color: #94a3b8;
-  --jse-selection-background-color: rgba(96, 165, 250, 0.18);
-  --jse-selection-background-inactive-color: rgba(96, 165, 250, 0.08);
+.editor-wrapper,
+.editor-wrapper * {
+  --jse-theme-color: #60a5fa !important;
+  --jse-theme-color-highlight: #93bbfd !important;
+  --jse-background-color: #1e293b !important;
+  --jse-panel-background: #1e293b !important;
+  --jse-text-color: #e2e8f0 !important;
+  --jse-text-color-inverse: #0f172a !important;
+  --jse-main-border: none !important;
+  --jse-menu-color: #e2e8f0 !important;
+  --jse-context-menu-background: #334155 !important;
+  --jse-context-menu-color: #e2e8f0 !important;
+  --jse-context-menu-border: #475569 !important;
+  --jse-panel-border: #334155 !important;
+  --jse-key-color: #7dd3fc !important;
+  --jse-value-color-string: #86efac !important;
+  --jse-value-color-number: #fca5a5 !important;
+  --jse-value-color-boolean: #c4b5fd !important;
+  --jse-value-color-null: #94a3b8 !important;
+  --jse-delimiter-color: #94a3b8 !important;
+  --jse-selection-background-color: rgba(96, 165, 250, 0.18) !important;
+  --jse-selection-background-inactive-color: rgba(96, 165, 250, 0.08) !important;
+  --jse-navigation-bar-background: #162032 !important;
+  --jse-navigation-bar-color: #94a3b8 !important;
+  --jse-navigation-bar-color-highlight: #e2e8f0 !important;
+  --jse-input-background: #0f172a !important;
+  --jse-input-border: #475569 !important;
+  --jse-tag-background: #334155 !important;
+  --jse-tag-color: #e2e8f0 !important;
+  --jse-button-background: #334155 !important;
+  --jse-button-background-highlight: #475569 !important;
+  --jse-button-color: #e2e8f0 !important;
+  --jse-modal-background: #1e293b !important;
+  --jse-modal-overlay-background: rgba(0, 0, 0, 0.5) !important;
+  --jse-modal-code-background: #0f172a !important;
 }
 
 /* ========== Mobile ========== */
