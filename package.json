@@ -1,7 +1,9 @@
 {
   "name": "json-editor",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "JSON Editor & Dev Tools Online — JSON, JWT, Base64, URL, Timestamp, UUID",
+  "homepage": "https://alexkostromin.github.io/json_editor/",
   "type": "module",
   "scripts": {
     "dev": "vite",

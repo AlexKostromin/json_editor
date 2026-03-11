@@ -3,13 +3,88 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
     <title>JSON Editor & Dev Tools Online — JSON, JWT, Base64, URL, Timestamp, UUID</title>
-    <meta name="description" content="Бесплатные онлайн инструменты для разработчика: JSON редактор, JWT декодер, Base64, URL encode/decode, Unix Timestamp конвертер, UUID генератор. Всё в браузере." />
-    <meta name="keywords" content="json, editor, formatter, jwt decoder, base64, url encode, url decode, unix timestamp, uuid generator, инструменты разработчика, json онлайн" />
+    <meta name="description" content="Бесплатные онлайн инструменты для разработчика: JSON редактор с форматированием и валидацией, JWT декодер, Base64 encode/decode, URL encode/decode, Unix Timestamp конвертер, UUID генератор. Всё работает в браузере без регистрации." />
+    <meta name="keywords" content="json editor, json formatter, json validator, json онлайн, jwt decoder, jwt парсер, base64 encode, base64 decode, url encode, url decode, unix timestamp converter, uuid generator, инструменты разработчика, dev tools online" />
+    <meta name="author" content="AlexKostromin" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://alexkostromin.github.io/json_editor/" />
+
+    <!-- Open Graph (Facebook, Telegram, VK, Discord) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://alexkostromin.github.io/json_editor/" />
+    <meta property="og:title" content="JSON Editor & Dev Tools Online" />
+    <meta property="og:description" content="JSON редактор, JWT декодер, Base64, URL encode/decode, Timestamp, UUID — бесплатные инструменты для разработчика прямо в браузере." />
+    <meta property="og:site_name" content="JSON Editor Online" />
+    <meta property="og:locale" content="ru_RU" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="JSON Editor & Dev Tools Online" />
+    <meta name="twitter:description" content="JSON редактор, JWT декодер, Base64, URL, Timestamp, UUID — бесплатно в браузере." />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "JSON Editor & Dev Tools Online",
+      "url": "https://alexkostromin.github.io/json_editor/",
+      "description": "Бесплатные онлайн инструменты для разработчика: JSON редактор, JWT декодер, Base64, URL encode/decode, Unix Timestamp конвертер, UUID генератор.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "RUB"
+      },
+      "featureList": [
+        "JSON formatting and validation",
+        "JSON tree, text and table view",
+        "JWT token decoder",
+        "Base64 encode and decode",
+        "URL encode and decode",
+        "Unix Timestamp converter",
+        "UUID v4 generator"
+      ],
+      "inLanguage": ["ru", "en"],
+      "browserRequirements": "Requires JavaScript",
+      "softwareVersion": "1.0.0"
+    }
+    </script>
+
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>{ }</text></svg>" />
   </head>
   <body>
     <div id="app"></div>
+    <noscript>
+      <h1>JSON Editor & Dev Tools Online</h1>
+      <p>Бесплатные онлайн инструменты для разработчика: JSON редактор, JWT декодер, Base64, URL encode/decode, Unix Timestamp конвертер, UUID генератор.</p>
+      <p>Для работы необходим JavaScript.</p>
+    </noscript>
+
+    <!-- SEO content (visible to crawlers, hidden visually via CSS) -->
+    <footer id="seo-footer" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
+      <h2>Онлайн JSON редактор</h2>
+      <p>Бесплатный JSON Editor Online с подсветкой синтаксиса, форматированием, валидацией и древовидным просмотром. Поддерживает режимы tree, text и table для удобной работы с JSON данными любого размера.</p>
+
+      <h2>JWT Decoder — декодирование токенов</h2>
+      <p>Онлайн JWT декодер: вставьте JSON Web Token и мгновенно получите расшифрованные header и payload. Автоматическое преобразование Unix timestamp полей (exp, iat, nbf) в читаемые даты. Безопасно — токен не покидает ваш браузер.</p>
+
+      <h2>Base64 Encode / Decode</h2>
+      <p>Кодирование и декодирование Base64 онлайн. Поддержка кириллицы и Unicode. Конвертируйте текст в Base64 и обратно мгновенно в браузере.</p>
+
+      <h2>URL Encode / Decode</h2>
+      <p>URL кодирование и декодирование онлайн. Преобразование специальных символов, кириллицы и пробелов в URL-safe формат и обратно.</p>
+
+      <h2>Unix Timestamp конвертер</h2>
+      <p>Конвертер Unix Timestamp в человекочитаемую дату и обратно. Поддержка секунд и миллисекунд, отображение в UTC и локальном времени.</p>
+
+      <h2>UUID генератор</h2>
+      <p>Генератор случайных UUID v4 онлайн. Создание уникальных идентификаторов для баз данных, API и тестирования.</p>
+    </footer>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

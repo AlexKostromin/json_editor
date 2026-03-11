@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alexkostromin.github.io/json_editor/sitemap.xml
