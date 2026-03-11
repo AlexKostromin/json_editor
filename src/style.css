@@ -306,8 +306,8 @@ header {
 /* ========== Always dark jsoneditor ========== */
 .editor-wrapper,
 .editor-wrapper * {
-  --jse-theme-color: #60a5fa !important;
-  --jse-theme-color-highlight: #93bbfd !important;
+  --jse-theme-color: #0f172a !important;
+  --jse-theme-color-highlight: #1e293b !important;
   --jse-background-color: #1e293b !important;
   --jse-panel-background: #1e293b !important;
   --jse-text-color: #e2e8f0 !important;
