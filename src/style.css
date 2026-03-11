@@ -148,8 +148,12 @@ header {
   display: none;
 }
 
-/* ========== Header Tool Buttons ========== */
-.header-tool-btn {
+/* ========== Tools Dropdown ========== */
+.tools-dropdown {
+  position: relative;
+}
+
+.header-tools-toggle {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -167,69 +171,174 @@ header {
   letter-spacing: 0.3px;
 }
 
-.header-tool-btn svg {
-  width: 16px;
-  height: 16px;
+.header-tools-toggle svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.2s ease;
 }
 
-.header-tool-btn:hover {
+.header-tools-toggle:hover {
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.25);
 }
 
-.header-tool-btn:active {
-  transform: scale(0.97);
+.tools-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 380px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.2s ease;
+  z-index: 100;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
 }
 
-/* Individual tool button colors */
-.header-jwt-btn {
-  color: #fbbf24;
-  border-color: rgba(251, 191, 36, 0.25);
-  background: rgba(251, 191, 36, 0.1);
-}
-.header-jwt-btn:hover {
-  background: rgba(251, 191, 36, 0.2);
-  border-color: rgba(251, 191, 36, 0.4);
+.tools-panel.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
-.header-base64-btn {
-  color: #a78bfa;
-  border-color: rgba(167, 139, 250, 0.25);
-  background: rgba(167, 139, 250, 0.1);
-}
-.header-base64-btn:hover {
-  background: rgba(167, 139, 250, 0.2);
-  border-color: rgba(167, 139, 250, 0.4);
-}
-
-.header-url-btn {
-  color: #34d399;
-  border-color: rgba(52, 211, 153, 0.25);
-  background: rgba(52, 211, 153, 0.1);
-}
-.header-url-btn:hover {
-  background: rgba(52, 211, 153, 0.2);
-  border-color: rgba(52, 211, 153, 0.4);
+.tool-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #e2e8f0;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  text-align: left;
 }
 
-.header-timestamp-btn {
+.tool-item:hover {
+  background: #334155;
+}
+
+.tool-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background: rgba(96, 165, 250, 0.12);
   color: #60a5fa;
-  border-color: rgba(96, 165, 250, 0.25);
-  background: rgba(96, 165, 250, 0.1);
-}
-.header-timestamp-btn:hover {
-  background: rgba(96, 165, 250, 0.2);
-  border-color: rgba(96, 165, 250, 0.4);
 }
 
-.header-uuid-btn {
-  color: #fb923c;
-  border-color: rgba(251, 146, 60, 0.25);
-  background: rgba(251, 146, 60, 0.1);
+.tool-icon svg {
+  width: 16px;
+  height: 16px;
 }
-.header-uuid-btn:hover {
-  background: rgba(251, 146, 60, 0.2);
-  border-color: rgba(251, 146, 60, 0.4);
+
+/* Tool-specific icon colors */
+.tool-item.jwt .tool-icon { background: rgba(251, 191, 36, 0.12); color: #fbbf24; }
+.tool-item.base64 .tool-icon { background: rgba(167, 139, 250, 0.12); color: #a78bfa; }
+.tool-item.url .tool-icon { background: rgba(52, 211, 153, 0.12); color: #34d399; }
+.tool-item.timestamp .tool-icon { background: rgba(96, 165, 250, 0.12); color: #60a5fa; }
+.tool-item.uuid .tool-icon { background: rgba(251, 146, 60, 0.12); color: #fb923c; }
+.tool-item.yaml .tool-icon { background: rgba(244, 114, 182, 0.12); color: #f472b6; }
+.tool-item.schema .tool-icon { background: rgba(45, 212, 191, 0.12); color: #2dd4bf; }
+.tool-item.hash .tool-icon { background: rgba(148, 163, 184, 0.12); color: #94a3b8; }
+.tool-item.regex .tool-icon { background: rgba(251, 113, 133, 0.12); color: #fb7185; }
+.tool-item.color .tool-icon { background: rgba(248, 113, 113, 0.12); color: #f87171; }
+.tool-item.diff .tool-icon { background: rgba(129, 140, 248, 0.12); color: #818cf8; }
+.tool-item.mock .tool-icon { background: rgba(74, 222, 128, 0.12); color: #4ade80; }
+
+.tool-name {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  display: block;
+}
+
+.tool-desc {
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.2;
+  display: block;
+}
+
+/* ========== Footer ========== */
+.app-footer {
+  background: #0f172a;
+  border-top: 1px solid #1e293b;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.footer-sep {
+  color: #334155;
+}
+
+.visit-counter strong {
+  color: #94a3b8;
+}
+
+/* ========== Modal field group ========== */
+.modal-field-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.modal-field-group input[type="text"],
+.modal-field-group input[type="number"] {
+  flex: 1;
+  background: #0f172a;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.modal-field-group input:focus {
+  border-color: #60a5fa;
+}
+
+.modal input[type="text"],
+.modal input[type="number"] {
+  width: 100%;
+  background: #0f172a;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.modal input[type="text"]:focus,
+.modal input[type="number"]:focus {
+  border-color: #60a5fa;
 }
 
 /* ========== Toolbar ========== */
@@ -592,9 +701,15 @@ div[class*="navigation-bar"] {
     display: none;
   }
 
-  .header-tool-btn {
+  .header-tools-toggle {
     padding: 5px 10px;
     font-size: 11px;
+  }
+
+  .tools-panel {
+    width: calc(100vw - 24px);
+    right: -12px;
+    grid-template-columns: 1fr;
   }
 
   .toolbar {
@@ -620,6 +735,18 @@ div[class*="navigation-bar"] {
   .editor-wrapper {
     padding: 6px 8px 8px;
   }
+
+  .app-footer {
+    padding: 6px 12px;
+    font-size: 11px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .modal {
+    width: 95%;
+    padding: 20px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -632,5 +759,9 @@ div[class*="navigation-bar"] {
 
   .header-left h1 {
     font-size: 0.85rem;
+  }
+
+  .tools-panel {
+    grid-template-columns: 1fr;
   }
 }

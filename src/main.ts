@@ -1,5 +1,10 @@
 import { createJSONEditor, type JSONEditorPropsOptional } from 'vanilla-jsoneditor';
-import { base64Encode, base64Decode, urlEncode, urlDecode, timestampToDate, dateToTimestamp, generateUUIDs, decodeJwt } from './tools';
+import {
+  base64Encode, base64Decode, urlEncode, urlDecode,
+  timestampToDate, dateToTimestamp, generateUUIDs, decodeJwt,
+  jsonToYaml, yamlToJson, generateJsonSchema, generateHashes,
+  testRegex, convertColor, jsonDiff, generateMockUsers,
+} from './tools';
 import './style.css';
 
 const app = document.getElementById('app')!;
@@ -15,7 +20,7 @@ const icons = {
   download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
   upload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
   jwt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
-  tools: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+  chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
 };
 
 // ========== Header ==========
@@ -27,21 +32,73 @@ header.innerHTML = `
     <div class="header-badge">Online</div>
   </div>
   <div class="header-right-section">
-    <button class="header-tool-btn header-jwt-btn" id="btn-jwt-header">
-      ${icons.jwt}<span>JWT</span>
-    </button>
-    <button class="header-tool-btn header-base64-btn" id="btn-base64">
-      <span>B64</span>
-    </button>
-    <button class="header-tool-btn header-url-btn" id="btn-url">
-      <span>URL</span>
-    </button>
-    <button class="header-tool-btn header-timestamp-btn" id="btn-timestamp">
-      <span>Time</span>
-    </button>
-    <button class="header-tool-btn header-uuid-btn" id="btn-uuid">
-      <span>UUID</span>
-    </button>
+    <div class="tools-dropdown">
+      <button class="header-tool-btn header-tools-toggle" id="tools-toggle">
+        Dev Tools ${icons.chevron}
+      </button>
+      <div class="tools-panel" id="tools-panel">
+        <button class="tool-item jwt" id="btn-jwt-header">
+          <span class="tool-icon">${icons.jwt}</span>
+          <span class="tool-name">JWT Decoder</span>
+          <span class="tool-desc">Декодирование токенов</span>
+        </button>
+        <button class="tool-item base64" id="btn-base64">
+          <span class="tool-icon">B64</span>
+          <span class="tool-name">Base64</span>
+          <span class="tool-desc">Encode / Decode</span>
+        </button>
+        <button class="tool-item url" id="btn-url">
+          <span class="tool-icon">URL</span>
+          <span class="tool-name">URL Encode</span>
+          <span class="tool-desc">Encode / Decode</span>
+        </button>
+        <button class="tool-item timestamp" id="btn-timestamp">
+          <span class="tool-icon">TS</span>
+          <span class="tool-name">Timestamp</span>
+          <span class="tool-desc">Unix время в дату</span>
+        </button>
+        <button class="tool-item uuid" id="btn-uuid">
+          <span class="tool-icon">ID</span>
+          <span class="tool-name">UUID v4</span>
+          <span class="tool-desc">Генерация UUID</span>
+        </button>
+        <button class="tool-item yaml" id="btn-yaml">
+          <span class="tool-icon">YML</span>
+          <span class="tool-name">YAML ↔ JSON</span>
+          <span class="tool-desc">Конвертер форматов</span>
+        </button>
+        <button class="tool-item schema" id="btn-schema">
+          <span class="tool-icon">{ }</span>
+          <span class="tool-name">JSON Schema</span>
+          <span class="tool-desc">Генерация схемы</span>
+        </button>
+        <button class="tool-item hash" id="btn-hash">
+          <span class="tool-icon">#</span>
+          <span class="tool-name">Hash</span>
+          <span class="tool-desc">SHA-256, SHA-1, SHA-512</span>
+        </button>
+        <button class="tool-item regex" id="btn-regex">
+          <span class="tool-icon">.*</span>
+          <span class="tool-name">Regex Tester</span>
+          <span class="tool-desc">Тест регулярных выражений</span>
+        </button>
+        <button class="tool-item color" id="btn-color">
+          <span class="tool-icon" style="color:#f87171">●</span>
+          <span class="tool-name">Color Converter</span>
+          <span class="tool-desc">HEX / RGB / HSL</span>
+        </button>
+        <button class="tool-item diff" id="btn-diff">
+          <span class="tool-icon">≠</span>
+          <span class="tool-name">JSON Diff</span>
+          <span class="tool-desc">Сравнение двух JSON</span>
+        </button>
+        <button class="tool-item mock" id="btn-mock">
+          <span class="tool-icon">👤</span>
+          <span class="tool-name">Mock Data</span>
+          <span class="tool-desc">Фейковые данные</span>
+        </button>
+      </div>
+    </div>
     <label class="theme-btn" title="Переключить тему">
       <input type="checkbox" id="theme-switch" />
       <span id="theme-icon">☀️</span>
@@ -49,6 +106,20 @@ header.innerHTML = `
   </div>
 `;
 app.appendChild(header);
+
+// Tools dropdown toggle
+const toolsToggle = document.getElementById('tools-toggle')!;
+const toolsPanel = document.getElementById('tools-panel')!;
+
+toolsToggle.addEventListener('click', () => {
+  toolsPanel.classList.toggle('open');
+});
+
+document.addEventListener('click', (e) => {
+  if (!(e.target as Element).closest('.tools-dropdown')) {
+    toolsPanel.classList.remove('open');
+  }
+});
 
 // ========== Toolbar ==========
 const toolbar = document.createElement('div');
@@ -95,7 +166,7 @@ app.appendChild(toolbar);
 // Hidden file input
 const fileInput = document.createElement('input');
 fileInput.type = 'file';
-fileInput.accept = '.json,application/json';
+fileInput.accept = '.json,.yaml,.yml,application/json';
 fileInput.style.display = 'none';
 document.body.appendChild(fileInput);
 
@@ -126,6 +197,7 @@ function openModal(title: string, bodyHtml: string, actionLabel: string, handler
   modalAction.textContent = actionLabel;
   currentModalHandler = handler;
   modal.classList.add('show');
+  toolsPanel.classList.remove('open');
   const firstInput = modalBody.querySelector('textarea, input') as HTMLElement | null;
   if (firstInput) setTimeout(() => firstInput.focus(), 50);
 }
@@ -157,44 +229,51 @@ const editorWrapper = document.createElement('div');
 editorWrapper.className = 'editor-wrapper';
 app.appendChild(editorWrapper);
 
+// ========== Footer ==========
+const footer = document.createElement('footer');
+footer.className = 'app-footer';
+const visitCount = Number(localStorage.getItem('json-editor-visits') || '0') + 1;
+localStorage.setItem('json-editor-visits', String(visitCount));
+footer.innerHTML = `
+  <span>JSON Editor & Dev Tools</span>
+  <span class="footer-sep">·</span>
+  <span>12 инструментов</span>
+  <span class="footer-sep">·</span>
+  <span>Всё работает в браузере</span>
+  <span class="footer-sep">·</span>
+  <span class="visit-counter">Посещений: <strong id="visit-count">${visitCount}</strong></span>
+`;
+app.appendChild(footer);
+
+// Try to get global visit count from counter API
+const counterImg = new Image();
+counterImg.src = 'https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Falexkostromin.github.io%2Fjson_editor&count_bg=%231e293b&title_bg=%231e293b&icon=&icon_color=%23E7E7E7&title=&edge_flat=true';
+counterImg.style.display = 'none';
+document.body.appendChild(counterImg);
+
+// ========== Sample data ==========
 const sampleJson = {
   name: 'JSON Editor',
   description: 'Онлайн-редактор JSON',
   version: '1.0.0',
   features: ['tree view', 'text mode', 'table mode', 'search', 'formatting'],
-  author: {
-    name: 'User',
-    email: 'user@example.com',
-  },
+  author: { name: 'User', email: 'user@example.com' },
   tags: ['json', 'editor', 'tool'],
-  settings: {
-    theme: 'light',
-    fontSize: 14,
-    autoFormat: true,
-  },
+  settings: { theme: 'light', fontSize: 14, autoFormat: true },
 };
 
-let content: { json: unknown } | { text: string } = {
-  json: sampleJson,
-};
+let content: { json: unknown } | { text: string } = { json: sampleJson };
 
 const editorProps: JSONEditorPropsOptional = {
   content,
   navigationBar: false,
   onRenderContextMenu: () => false,
-  onChange: (updatedContent) => {
-    content = updatedContent as typeof content;
-  },
+  onChange: (updatedContent) => { content = updatedContent as typeof content; },
 };
 
-const editor = createJSONEditor({
-  target: editorWrapper,
-  props: editorProps,
-});
-
+const editor = createJSONEditor({ target: editorWrapper, props: editorProps });
 editor.updateProps({ navigationBar: false });
 
-// Helpers
 function getTextContent(): string {
   return 'text' in content ? content.text : JSON.stringify(content.json);
 }
@@ -206,89 +285,54 @@ function getFormattedContent(): string {
 // ========== JSON Button Handlers ==========
 
 document.getElementById('btn-format')!.addEventListener('click', () => {
-  try {
-    const parsed = JSON.parse(getTextContent());
-    editor.set({ json: parsed });
-    showToast('JSON отформатирован');
-  } catch {
-    showToast('Ошибка: невалидный JSON');
-  }
+  try { editor.set({ json: JSON.parse(getTextContent()) }); showToast('JSON отформатирован'); }
+  catch { showToast('Ошибка: невалидный JSON'); }
 });
 
 document.getElementById('btn-compact')!.addEventListener('click', () => {
-  try {
-    const parsed = JSON.parse(getTextContent());
-    editor.set({ text: JSON.stringify(parsed) });
-    showToast('JSON сжат в одну строку');
-  } catch {
-    showToast('Ошибка: невалидный JSON');
-  }
+  try { editor.set({ text: JSON.stringify(JSON.parse(getTextContent())) }); showToast('JSON сжат'); }
+  catch { showToast('Ошибка: невалидный JSON'); }
 });
 
 document.getElementById('btn-clear')!.addEventListener('click', () => {
-  editor.set({ text: '' });
-  showToast('Редактор очищен');
+  editor.set({ text: '' }); showToast('Очищено');
 });
 
 document.getElementById('btn-copy')!.addEventListener('click', () => {
-  const text = getFormattedContent();
-  navigator.clipboard.writeText(text).then(() => {
-    showToast('Скопировано в буфер обмена');
-  });
+  navigator.clipboard.writeText(getFormattedContent()).then(() => showToast('Скопировано'));
 });
 
 document.getElementById('btn-paste')!.addEventListener('click', () => {
   navigator.clipboard.readText().then((text) => {
-    try {
-      const parsed = JSON.parse(text);
-      editor.set({ json: parsed });
-      showToast('JSON вставлен');
-    } catch {
-      editor.set({ text });
-      showToast('Текст вставлен');
-    }
-  }).catch(() => {
-    showToast('Нет доступа к буферу обмена');
-  });
+    try { editor.set({ json: JSON.parse(text) }); showToast('JSON вставлен'); }
+    catch { editor.set({ text }); showToast('Текст вставлен'); }
+  }).catch(() => showToast('Нет доступа к буферу'));
 });
 
 document.getElementById('btn-sample')!.addEventListener('click', () => {
-  editor.set({ json: sampleJson });
-  showToast('Пример загружен');
+  editor.set({ json: sampleJson }); showToast('Пример загружен');
 });
 
-// Upload JSON file
-document.getElementById('btn-upload')!.addEventListener('click', () => {
-  fileInput.click();
-});
+document.getElementById('btn-upload')!.addEventListener('click', () => fileInput.click());
 
 fileInput.addEventListener('change', () => {
   const file = fileInput.files?.[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = () => {
-    try {
-      const parsed = JSON.parse(reader.result as string);
-      editor.set({ json: parsed });
-      showToast(`Файл "${file.name}" загружен`);
-    } catch {
-      editor.set({ text: reader.result as string });
-      showToast('Файл загружен (не JSON)');
-    }
+    const text = reader.result as string;
+    try { editor.set({ json: JSON.parse(text) }); showToast(`${file.name} загружен`); }
+    catch { editor.set({ text }); showToast('Файл загружен'); }
   };
   reader.readAsText(file);
   fileInput.value = '';
 });
 
-// Download JSON file
 document.getElementById('btn-download')!.addEventListener('click', () => {
-  const text = getFormattedContent();
-  const blob = new Blob([text], { type: 'application/json' });
+  const blob = new Blob([getFormattedContent()], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = 'data.json';
-  a.click();
+  a.href = url; a.download = 'data.json'; a.click();
   URL.revokeObjectURL(url);
   showToast('Файл скачан');
 });
@@ -297,108 +341,186 @@ document.getElementById('btn-download')!.addEventListener('click', () => {
 
 // JWT
 document.getElementById('btn-jwt-header')!.addEventListener('click', () => {
-  openModal(
-    'Декодировать JWT токен',
-    '<textarea id="tool-input" placeholder="Вставьте JWT токен (eyJhbG...)..." rows="4"></textarea>',
-    'Декодировать',
-    () => {
-      const input = (document.getElementById('tool-input') as HTMLTextAreaElement).value.trim();
-      if (!input) { showToast('Вставьте JWT токен'); return; }
-      try {
-        const result = decodeJwt(input);
-        editor.set({ json: result });
-        closeModal();
-        showToast('JWT токен декодирован');
-      } catch (e) {
-        showToast(e instanceof Error ? e.message : 'Ошибка декодирования JWT');
-      }
-    }
-  );
+  openModal('JWT Decoder', '<textarea id="tool-input" placeholder="Вставьте JWT токен (eyJhbG...)..." rows="4"></textarea>', 'Декодировать', () => {
+    const v = (document.getElementById('tool-input') as HTMLTextAreaElement).value.trim();
+    if (!v) { showToast('Вставьте JWT токен'); return; }
+    try { editor.set({ json: decodeJwt(v) }); closeModal(); showToast('JWT декодирован'); }
+    catch (e) { showToast(e instanceof Error ? e.message : 'Ошибка'); }
+  });
 });
 
 // Base64
 document.getElementById('btn-base64')!.addEventListener('click', () => {
-  openModal(
-    'Base64 Encode / Decode',
+  openModal('Base64 Encode / Decode',
     `<textarea id="tool-input" placeholder="Введите текст или Base64 строку..." rows="4"></textarea>
      <div class="modal-radio-group">
        <label><input type="radio" name="b64dir" value="encode" checked /> Encode</label>
        <label><input type="radio" name="b64dir" value="decode" /> Decode</label>
-     </div>`,
-    'Конвертировать',
-    () => {
-      const input = (document.getElementById('tool-input') as HTMLTextAreaElement).value;
-      if (!input) { showToast('Введите текст'); return; }
-      const direction = (document.querySelector('input[name="b64dir"]:checked') as HTMLInputElement).value;
-      try {
-        const result = direction === 'encode' ? base64Encode(input) : base64Decode(input);
-        editor.set({ text: JSON.stringify({ input, direction, result }, null, 2) });
-        closeModal();
-        showToast(`Base64 ${direction === 'encode' ? 'закодировано' : 'декодировано'}`);
-      } catch {
-        showToast('Ошибка: невалидные данные');
-      }
-    }
-  );
+     </div>`, 'Конвертировать', () => {
+    const v = (document.getElementById('tool-input') as HTMLTextAreaElement).value;
+    if (!v) { showToast('Введите текст'); return; }
+    const dir = (document.querySelector('input[name="b64dir"]:checked') as HTMLInputElement).value;
+    try {
+      const result = dir === 'encode' ? base64Encode(v) : base64Decode(v);
+      editor.set({ text: JSON.stringify({ input: v, direction: dir, result }, null, 2) });
+      closeModal(); showToast(`Base64 ${dir === 'encode' ? 'закодировано' : 'декодировано'}`);
+    } catch { showToast('Ошибка: невалидные данные'); }
+  });
 });
 
-// URL encode/decode
+// URL
 document.getElementById('btn-url')!.addEventListener('click', () => {
-  openModal(
-    'URL Encode / Decode',
+  openModal('URL Encode / Decode',
     `<textarea id="tool-input" placeholder="Введите URL или текст..." rows="4"></textarea>
      <div class="modal-radio-group">
        <label><input type="radio" name="urldir" value="encode" checked /> Encode</label>
        <label><input type="radio" name="urldir" value="decode" /> Decode</label>
-     </div>`,
-    'Конвертировать',
-    () => {
-      const input = (document.getElementById('tool-input') as HTMLTextAreaElement).value;
-      if (!input) { showToast('Введите текст'); return; }
-      const direction = (document.querySelector('input[name="urldir"]:checked') as HTMLInputElement).value;
-      try {
-        const result = direction === 'encode' ? urlEncode(input) : urlDecode(input);
-        editor.set({ text: JSON.stringify({ input, direction, result }, null, 2) });
-        closeModal();
-        showToast(`URL ${direction === 'encode' ? 'закодирован' : 'декодирован'}`);
-      } catch {
-        showToast('Ошибка: невалидные данные');
-      }
-    }
-  );
+     </div>`, 'Конвертировать', () => {
+    const v = (document.getElementById('tool-input') as HTMLTextAreaElement).value;
+    if (!v) { showToast('Введите текст'); return; }
+    const dir = (document.querySelector('input[name="urldir"]:checked') as HTMLInputElement).value;
+    try {
+      const result = dir === 'encode' ? urlEncode(v) : urlDecode(v);
+      editor.set({ text: JSON.stringify({ input: v, direction: dir, result }, null, 2) });
+      closeModal(); showToast(`URL ${dir === 'encode' ? 'закодирован' : 'декодирован'}`);
+    } catch { showToast('Ошибка'); }
+  });
 });
 
 // Timestamp
 document.getElementById('btn-timestamp')!.addEventListener('click', () => {
-  openModal(
-    'Unix Timestamp конвертер',
-    `<textarea id="tool-input" placeholder="Введите Unix timestamp (например 1710000000)... Оставьте пустым для текущего времени" rows="2"></textarea>`,
-    'Конвертировать',
-    () => {
-      const input = (document.getElementById('tool-input') as HTMLTextAreaElement).value.trim();
-      try {
-        const result = input ? timestampToDate(input) : dateToTimestamp();
-        editor.set({ json: JSON.parse(result) });
-        closeModal();
-        showToast(input ? 'Timestamp конвертирован' : 'Текущее время');
-      } catch {
-        showToast('Ошибка: невалидный timestamp');
-      }
-    }
-  );
+  openModal('Unix Timestamp конвертер',
+    '<textarea id="tool-input" placeholder="Unix timestamp (1710000000)... Пусто = текущее время" rows="2"></textarea>',
+    'Конвертировать', () => {
+    const v = (document.getElementById('tool-input') as HTMLTextAreaElement).value.trim();
+    try {
+      editor.set({ json: JSON.parse(v ? timestampToDate(v) : dateToTimestamp()) });
+      closeModal(); showToast(v ? 'Timestamp конвертирован' : 'Текущее время');
+    } catch { showToast('Невалидный timestamp'); }
+  });
 });
 
 // UUID
 document.getElementById('btn-uuid')!.addEventListener('click', () => {
+  toolsPanel.classList.remove('open');
   const uuids = generateUUIDs(5);
-  editor.set({
-    json: {
-      generated: uuids,
-      count: uuids.length,
-      version: 'v4 (random)',
-    },
-  });
+  editor.set({ json: { generated: uuids, count: uuids.length, version: 'v4 (random)' } });
   showToast('5 UUID сгенерировано');
+});
+
+// YAML
+document.getElementById('btn-yaml')!.addEventListener('click', () => {
+  openModal('YAML ↔ JSON конвертер',
+    `<textarea id="tool-input" placeholder="Вставьте JSON или YAML..." rows="6"></textarea>
+     <div class="modal-radio-group">
+       <label><input type="radio" name="yamldir" value="json-to-yaml" checked /> JSON → YAML</label>
+       <label><input type="radio" name="yamldir" value="yaml-to-json" /> YAML → JSON</label>
+     </div>`, 'Конвертировать', () => {
+    const v = (document.getElementById('tool-input') as HTMLTextAreaElement).value;
+    if (!v.trim()) { showToast('Вставьте данные'); return; }
+    const dir = (document.querySelector('input[name="yamldir"]:checked') as HTMLInputElement).value;
+    try {
+      if (dir === 'json-to-yaml') {
+        const yamlStr = jsonToYaml(v);
+        editor.set({ text: yamlStr });
+        closeModal(); showToast('Конвертировано в YAML');
+      } else {
+        const jsonStr = yamlToJson(v);
+        editor.set({ json: JSON.parse(jsonStr) });
+        closeModal(); showToast('Конвертировано в JSON');
+      }
+    } catch { showToast('Ошибка конвертации'); }
+  });
+});
+
+// JSON Schema
+document.getElementById('btn-schema')!.addEventListener('click', () => {
+  toolsPanel.classList.remove('open');
+  try {
+    const schema = generateJsonSchema(getTextContent());
+    editor.set({ json: schema });
+    showToast('JSON Schema сгенерирована');
+  } catch { showToast('Ошибка: невалидный JSON'); }
+});
+
+// Hash
+document.getElementById('btn-hash')!.addEventListener('click', () => {
+  openModal('Hash Generator',
+    '<textarea id="tool-input" placeholder="Введите текст для хэширования..." rows="4"></textarea>',
+    'Сгенерировать', () => {
+    const v = (document.getElementById('tool-input') as HTMLTextAreaElement).value;
+    if (!v) { showToast('Введите текст'); return; }
+    generateHashes(v).then((hashes) => {
+      editor.set({ json: hashes });
+      closeModal(); showToast('Хэши сгенерированы');
+    });
+  });
+});
+
+// Regex
+document.getElementById('btn-regex')!.addEventListener('click', () => {
+  openModal('Regex Tester',
+    `<div class="modal-field-group">
+       <input id="regex-pattern" type="text" placeholder="Регулярное выражение (например: \\d+)" />
+       <input id="regex-flags" type="text" placeholder="Флаги (g, i, m...)" value="g" style="width:80px" />
+     </div>
+     <textarea id="tool-input" placeholder="Текст для проверки..." rows="4"></textarea>`,
+    'Тестировать', () => {
+    const pattern = (document.getElementById('regex-pattern') as HTMLInputElement).value;
+    const flags = (document.getElementById('regex-flags') as HTMLInputElement).value;
+    const text = (document.getElementById('tool-input') as HTMLTextAreaElement).value;
+    if (!pattern) { showToast('Введите regex'); return; }
+    try {
+      editor.set({ json: testRegex(pattern, flags, text) });
+      closeModal(); showToast('Regex протестирован');
+    } catch (e) { showToast(e instanceof Error ? e.message : 'Невалидный regex'); }
+  });
+});
+
+// Color
+document.getElementById('btn-color')!.addEventListener('click', () => {
+  openModal('Color Converter',
+    '<input id="tool-input" type="text" placeholder="HEX (#ff0000), RGB (rgb(255,0,0)) или HSL (hsl(0,100%,50%))" />',
+    'Конвертировать', () => {
+    const v = (document.getElementById('tool-input') as HTMLInputElement).value;
+    if (!v) { showToast('Введите цвет'); return; }
+    try {
+      const result = convertColor(v);
+      editor.set({ json: result });
+      closeModal(); showToast('Цвет конвертирован');
+    } catch (e) { showToast(e instanceof Error ? e.message : 'Ошибка'); }
+  });
+});
+
+// JSON Diff
+document.getElementById('btn-diff')!.addEventListener('click', () => {
+  openModal('JSON Diff — сравнение двух JSON',
+    `<textarea id="diff-input-1" placeholder="Первый JSON..." rows="4"></textarea>
+     <textarea id="diff-input-2" placeholder="Второй JSON..." rows="4" style="margin-top:8px"></textarea>`,
+    'Сравнить', () => {
+    const v1 = (document.getElementById('diff-input-1') as HTMLTextAreaElement).value;
+    const v2 = (document.getElementById('diff-input-2') as HTMLTextAreaElement).value;
+    if (!v1 || !v2) { showToast('Заполните оба поля'); return; }
+    try {
+      editor.set({ json: jsonDiff(v1, v2) });
+      closeModal(); showToast('Сравнение выполнено');
+    } catch { showToast('Ошибка: невалидный JSON'); }
+  });
+});
+
+// Mock Data
+document.getElementById('btn-mock')!.addEventListener('click', () => {
+  openModal('Mock Data Generator',
+    `<div class="modal-field-group">
+       <label style="color:#94a3b8;font-size:13px">Количество записей:</label>
+       <input id="tool-input" type="number" value="10" min="1" max="100" style="width:80px" />
+     </div>`,
+    'Сгенерировать', () => {
+    const count = Math.min(100, Math.max(1, Number((document.getElementById('tool-input') as HTMLInputElement).value) || 10));
+    const data = generateMockUsers(count);
+    editor.set({ json: data });
+    closeModal(); showToast(`${count} записей сгенерировано`);
+  });
 });
 
 // ========== Theme ==========
@@ -406,13 +528,9 @@ const themeSwitch = document.getElementById('theme-switch') as HTMLInputElement;
 const themeIcon = document.getElementById('theme-icon')!;
 
 function applyTheme(dark: boolean) {
-  if (dark) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    themeIcon.textContent = '🌙';
-  } else {
-    document.documentElement.removeAttribute('data-theme');
-    themeIcon.textContent = '☀️';
-  }
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
+  if (!dark) document.documentElement.removeAttribute('data-theme');
+  themeIcon.textContent = dark ? '🌙' : '☀️';
 }
 
 const savedTheme = localStorage.getItem('json-editor-theme');
