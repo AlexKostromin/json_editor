@@ -184,8 +184,6 @@ app.appendChild(editorWrapper);
 // ========== Footer ==========
 const footer = document.createElement('footer');
 footer.className = 'app-footer';
-const visitCount = Number(localStorage.getItem('devtools-visits') || '0') + 1;
-localStorage.setItem('devtools-visits', String(visitCount));
 footer.innerHTML = `
   <span>DevTools Online</span>
   <span class="footer-sep">·</span>
@@ -193,15 +191,18 @@ footer.innerHTML = `
   <span class="footer-sep">·</span>
   <span>Everything runs in your browser</span>
   <span class="footer-sep">·</span>
-  <span class="visit-counter">Visits: <strong id="visit-count">${visitCount}</strong></span>
+  <span class="visit-counter">Visits: <strong id="visit-count">...</strong></span>
 `;
 app.appendChild(footer);
 
-// Try to get global visit count from counter API
-const counterImg = new Image();
-counterImg.src = 'https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Falexkostromin.github.io%2Fjson_editor&count_bg=%231e293b&title_bg=%231e293b&icon=&icon_color=%23E7E7E7&title=&edge_flat=true';
-counterImg.style.display = 'none';
-document.body.appendChild(counterImg);
+// Global visit counter via seeyoufarm API
+fetch('https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Falexkostromin.github.io%2Fjson_editor&count_bg=%231e293b&title_bg=%231e293b&icon=&icon_color=%23E7E7E7&title=&edge_flat=true')
+  .then(r => r.text())
+  .then(svg => {
+    const match = svg.match(/<text[^>]*>(\d+)<\/text>\s*$/);
+    if (match) document.getElementById('visit-count')!.textContent = match[1];
+  })
+  .catch(() => { document.getElementById('visit-count')!.textContent = '—'; });
 
 // ========== Sample data ==========
 const sampleJson = {
