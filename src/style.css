@@ -193,7 +193,11 @@ header {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 12px;
-  align-content: start;
+  align-content: center;
+  justify-content: center;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
   background: var(--bg);
 }
 

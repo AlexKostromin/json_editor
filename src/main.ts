@@ -422,33 +422,33 @@ app.appendChild(header);
 const toolsGrid = document.createElement('div');
 toolsGrid.className = 'tools-grid';
 const toolCards = [
-  { id: 'btn-json', icon: '{ }', cls: 'json', key: 'chip_json' },
-  { id: 'btn-jwt-header', icon: icons.jwt, cls: 'jwt', key: 'chip_jwt' },
-  { id: 'btn-base64', icon: 'B64', cls: 'base64', key: 'chip_base64' },
-  { id: 'btn-url', icon: '%', cls: 'url', key: 'chip_url' },
-  { id: 'btn-timestamp', icon: '⏱', cls: 'timestamp', key: 'chip_timestamp' },
-  { id: 'btn-uuid', icon: 'ID', cls: 'uuid', key: 'chip_uuid' },
-  { id: 'btn-yaml', icon: 'YML', cls: 'yaml', key: 'chip_yaml' },
-  { id: 'btn-schema', icon: '{ }', cls: 'schema', key: 'chip_schema' },
-  { id: 'btn-hash', icon: '#', cls: 'hash', key: 'chip_hash' },
-  { id: 'btn-regex', icon: '.*', cls: 'regex', key: 'chip_regex' },
-  { id: 'btn-color', icon: '●', cls: 'color', key: 'chip_color' },
-  { id: 'btn-diff', icon: '≠', cls: 'diff', key: 'chip_diff' },
-  { id: 'btn-mock', icon: '⊞', cls: 'mock', key: 'chip_mock' },
-  { id: 'btn-cron', icon: '⏲', cls: 'cron', key: 'chip_cron' },
-  { id: 'btn-password', icon: '🔑', cls: 'password', key: 'chip_password' },
-  { id: 'btn-lorem', icon: 'Aa', cls: 'lorem', key: 'chip_lorem' },
-  { id: 'btn-numbase', icon: '0x', cls: 'numbase', key: 'chip_numbase' as LangKey },
-  { id: 'btn-casecvt', icon: 'Aa', cls: 'casecvt', key: 'chip_case' },
-  { id: 'btn-htmlent', icon: '&amp;', cls: 'htmlent', key: 'chip_entity' },
-  { id: 'btn-strescape', icon: '\\n', cls: 'strescape', key: 'chip_escape' },
-  { id: 'btn-querystr', icon: '?=', cls: 'querystr', key: 'chip_query' },
-  { id: 'btn-csv', icon: '📊', cls: 'csv', key: 'chip_csv' },
-  { id: 'btn-ts', icon: 'TS', cls: 'ts', key: 'chip_ts' },
-  { id: 'btn-textdiff', icon: '≈', cls: 'textdiff', key: 'chip_textdiff' },
+  { id: 'btn-json', icon: '{ }', cls: 'json', label: 'JSON' },
+  { id: 'btn-jwt-header', icon: icons.jwt, cls: 'jwt', label: 'JWT' },
+  { id: 'btn-base64', icon: 'B64', cls: 'base64', label: 'Base64' },
+  { id: 'btn-url', icon: '%', cls: 'url', label: 'URL' },
+  { id: 'btn-timestamp', icon: '⏱', cls: 'timestamp', label: 'Timestamp' },
+  { id: 'btn-uuid', icon: 'ID', cls: 'uuid', label: 'UUID' },
+  { id: 'btn-yaml', icon: 'YML', cls: 'yaml', label: 'YAML' },
+  { id: 'btn-schema', icon: '{ }', cls: 'schema', label: 'Schema' },
+  { id: 'btn-hash', icon: '#', cls: 'hash', label: 'Hash' },
+  { id: 'btn-regex', icon: '.*', cls: 'regex', label: 'Regex' },
+  { id: 'btn-color', icon: '●', cls: 'color', label: 'Color' },
+  { id: 'btn-diff', icon: '≠', cls: 'diff', label: 'JSON Diff' },
+  { id: 'btn-mock', icon: '⊞', cls: 'mock', label: 'Mock Data' },
+  { id: 'btn-cron', icon: '⏲', cls: 'cron', label: 'Cron' },
+  { id: 'btn-password', icon: '🔑', cls: 'password', label: 'Password' },
+  { id: 'btn-lorem', icon: 'Aa', cls: 'lorem', label: 'Lorem Ipsum' },
+  { id: 'btn-numbase', icon: '0x', cls: 'numbase', label: 'Num Base' },
+  { id: 'btn-casecvt', icon: 'Aa', cls: 'casecvt', label: 'Case' },
+  { id: 'btn-htmlent', icon: '&amp;', cls: 'htmlent', label: 'HTML Entity' },
+  { id: 'btn-strescape', icon: '\\n', cls: 'strescape', label: 'Escape' },
+  { id: 'btn-querystr', icon: '?=', cls: 'querystr', label: 'Query String' },
+  { id: 'btn-csv', icon: '📊', cls: 'csv', label: 'CSV' },
+  { id: 'btn-ts', icon: 'TS', cls: 'ts', label: 'TypeScript' },
+  { id: 'btn-textdiff', icon: '≈', cls: 'textdiff', label: 'Text Diff' },
 ];
 toolsGrid.innerHTML = toolCards.map(c =>
-  `<button class="tool-card ${c.cls}" id="${c.id}"><span class="tool-card-icon">${c.icon}</span><span class="tool-card-label">${tr(c.key as LangKey)}</span></button>`
+  `<button class="tool-card ${c.cls}" id="${c.id}"><span class="tool-card-icon">${c.icon}</span><span class="tool-card-label">${c.label}</span></button>`
 ).join('');
 app.appendChild(toolsGrid);
 
@@ -1102,17 +1102,6 @@ document.getElementById('btn-textdiff')!.addEventListener('click', () => {
 });
 
 // ========== Language ==========
-const chipMap: Record<string, LangKey> = {
-  'btn-json': 'chip_json', 'btn-jwt-header': 'chip_jwt', 'btn-base64': 'chip_base64',
-  'btn-url': 'chip_url', 'btn-timestamp': 'chip_timestamp', 'btn-uuid': 'chip_uuid',
-  'btn-yaml': 'chip_yaml', 'btn-schema': 'chip_schema', 'btn-hash': 'chip_hash',
-  'btn-regex': 'chip_regex', 'btn-color': 'chip_color', 'btn-diff': 'chip_diff',
-  'btn-mock': 'chip_mock', 'btn-cron': 'chip_cron', 'btn-password': 'chip_password',
-  'btn-lorem': 'chip_lorem', 'btn-numbase': 'chip_base', 'btn-casecvt': 'chip_case',
-  'btn-htmlent': 'chip_entity', 'btn-strescape': 'chip_escape', 'btn-querystr': 'chip_query',
-  'btn-csv': 'chip_csv', 'btn-ts': 'chip_ts', 'btn-textdiff': 'chip_textdiff',
-};
-
 const toolbarMap: Record<string, { label: LangKey; tip: LangKey }> = {
   'btn-format': { label: 'format', tip: 'tip_format' },
   'btn-compact': { label: 'minify', tip: 'tip_minify' },
@@ -1126,11 +1115,6 @@ const toolbarMap: Record<string, { label: LangKey; tip: LangKey }> = {
 
 function applyLanguage() {
   document.getElementById('lang-switch')!.textContent = lang.toUpperCase();
-  // Tool cards
-  for (const [id, key] of Object.entries(chipMap)) {
-    const label = document.getElementById(id)?.querySelector('.tool-card-label');
-    if (label) label.textContent = tr(key);
-  }
   // Toolbar buttons
   for (const [id, keys] of Object.entries(toolbarMap)) {
     const btn = document.getElementById(id);
