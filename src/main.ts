@@ -195,14 +195,10 @@ footer.innerHTML = `
 `;
 app.appendChild(footer);
 
-// Global visit counter via seeyoufarm API
-fetch('https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Falexkostromin.github.io%2Fjson_editor&count_bg=%231e293b&title_bg=%231e293b&icon=&icon_color=%23E7E7E7&title=&edge_flat=true')
-  .then(r => r.text())
-  .then(svg => {
-    const matches = [...svg.matchAll(/<text[^>]*>(\d+)<\/text>/g)];
-    const match = matches.length > 0 ? matches[matches.length - 1] : null;
-    if (match) document.getElementById('visit-count')!.textContent = match[1];
-  })
+// Global visit counter via counterapi.dev
+fetch('https://api.counterapi.dev/v1/devtools-online/visits/up')
+  .then(r => r.json())
+  .then(data => { document.getElementById('visit-count')!.textContent = String(data.count); })
   .catch(() => { document.getElementById('visit-count')!.textContent = '—'; });
 
 // ========== Sample data ==========
