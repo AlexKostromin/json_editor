@@ -199,7 +199,8 @@ app.appendChild(footer);
 fetch('https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Falexkostromin.github.io%2Fjson_editor&count_bg=%231e293b&title_bg=%231e293b&icon=&icon_color=%23E7E7E7&title=&edge_flat=true')
   .then(r => r.text())
   .then(svg => {
-    const match = svg.match(/<text[^>]*>(\d+)<\/text>\s*$/);
+    const matches = [...svg.matchAll(/<text[^>]*>(\d+)<\/text>/g)];
+    const match = matches.length > 0 ? matches[matches.length - 1] : null;
     if (match) document.getElementById('visit-count')!.textContent = match[1];
   })
   .catch(() => { document.getElementById('visit-count')!.textContent = '—'; });
