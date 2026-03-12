@@ -45,6 +45,7 @@ const t = {
     'chip_password': 'Password',
     'chip_lorem': 'Lorem',
     'chip_base': 'Base',
+    'chip_numbase': 'Base',
     'chip_case': 'Case',
     'chip_entity': 'Entity',
     'chip_escape': 'Escape',
@@ -224,6 +225,7 @@ const t = {
     'chip_password': 'Пароль',
     'chip_lorem': 'Lorem',
     'chip_base': 'Базис',
+    'chip_numbase': 'Базис',
     'chip_case': 'Регистр',
     'chip_entity': 'Сущн.',
     'chip_escape': 'Экран.',
@@ -406,6 +408,7 @@ header.innerHTML = `
     <div class="header-badge">Online</div>
   </div>
   <div class="header-right-section">
+    <button class="home-btn" id="btn-home">&#8962;</button>
     <button class="lang-btn" id="lang-switch">${lang.toUpperCase()}</button>
     <label class="theme-btn" title="Toggle theme">
       <input type="checkbox" id="theme-switch" />
@@ -415,40 +418,39 @@ header.innerHTML = `
 `;
 app.appendChild(header);
 
-// ========== Tools Bar ==========
-const toolsBar = document.createElement('div');
-toolsBar.className = 'tools-bar';
-toolsBar.innerHTML = `
-  <button class="tool-chip json active" id="btn-json">{ }<span>JSON</span></button>
-  <div class="tools-sep"></div>
-  <button class="tool-chip jwt" id="btn-jwt-header">${icons.jwt}<span>JWT</span></button>
-  <button class="tool-chip base64" id="btn-base64">B64<span>Base64</span></button>
-  <button class="tool-chip url" id="btn-url">%<span>URL</span></button>
-  <button class="tool-chip timestamp" id="btn-timestamp">⏱<span>Timestamp</span></button>
-  <button class="tool-chip uuid" id="btn-uuid">ID<span>UUID</span></button>
-  <div class="tools-sep"></div>
-  <button class="tool-chip yaml" id="btn-yaml">YML<span>YAML</span></button>
-  <button class="tool-chip schema" id="btn-schema">{ }<span>Schema</span></button>
-  <button class="tool-chip hash" id="btn-hash">#<span>Hash</span></button>
-  <button class="tool-chip regex" id="btn-regex">.*<span>Regex</span></button>
-  <button class="tool-chip color" id="btn-color">●<span>Color</span></button>
-  <button class="tool-chip diff" id="btn-diff">≠<span>Diff</span></button>
-  <button class="tool-chip mock" id="btn-mock">⊞<span>Mock</span></button>
-  <div class="tools-sep"></div>
-  <button class="tool-chip cron" id="btn-cron">⏲<span>Cron</span></button>
-  <button class="tool-chip password" id="btn-password">🔑<span>Password</span></button>
-  <button class="tool-chip lorem" id="btn-lorem">Aa<span>Lorem</span></button>
-  <button class="tool-chip numbase" id="btn-numbase">0x<span>Base</span></button>
-  <button class="tool-chip casecvt" id="btn-casecvt">Aa<span>Case</span></button>
-  <button class="tool-chip htmlent" id="btn-htmlent">&amp;<span>Entity</span></button>
-  <button class="tool-chip strescape" id="btn-strescape">\\n<span>Escape</span></button>
-  <button class="tool-chip querystr" id="btn-querystr">?=<span>Query</span></button>
-  <div class="tools-sep"></div>
-  <button class="tool-chip csv" id="btn-csv">📊<span>CSV</span></button>
-  <button class="tool-chip ts" id="btn-ts">TS<span>TS Types</span></button>
-  <button class="tool-chip textdiff" id="btn-textdiff">≈<span>TextDiff</span></button>
-`;
-app.appendChild(toolsBar);
+// ========== Tools Grid (Home Screen) ==========
+const toolsGrid = document.createElement('div');
+toolsGrid.className = 'tools-grid';
+const toolCards = [
+  { id: 'btn-json', icon: '{ }', cls: 'json', key: 'chip_json' },
+  { id: 'btn-jwt-header', icon: icons.jwt, cls: 'jwt', key: 'chip_jwt' },
+  { id: 'btn-base64', icon: 'B64', cls: 'base64', key: 'chip_base64' },
+  { id: 'btn-url', icon: '%', cls: 'url', key: 'chip_url' },
+  { id: 'btn-timestamp', icon: '⏱', cls: 'timestamp', key: 'chip_timestamp' },
+  { id: 'btn-uuid', icon: 'ID', cls: 'uuid', key: 'chip_uuid' },
+  { id: 'btn-yaml', icon: 'YML', cls: 'yaml', key: 'chip_yaml' },
+  { id: 'btn-schema', icon: '{ }', cls: 'schema', key: 'chip_schema' },
+  { id: 'btn-hash', icon: '#', cls: 'hash', key: 'chip_hash' },
+  { id: 'btn-regex', icon: '.*', cls: 'regex', key: 'chip_regex' },
+  { id: 'btn-color', icon: '●', cls: 'color', key: 'chip_color' },
+  { id: 'btn-diff', icon: '≠', cls: 'diff', key: 'chip_diff' },
+  { id: 'btn-mock', icon: '⊞', cls: 'mock', key: 'chip_mock' },
+  { id: 'btn-cron', icon: '⏲', cls: 'cron', key: 'chip_cron' },
+  { id: 'btn-password', icon: '🔑', cls: 'password', key: 'chip_password' },
+  { id: 'btn-lorem', icon: 'Aa', cls: 'lorem', key: 'chip_lorem' },
+  { id: 'btn-numbase', icon: '0x', cls: 'numbase', key: 'chip_numbase' as LangKey },
+  { id: 'btn-casecvt', icon: 'Aa', cls: 'casecvt', key: 'chip_case' },
+  { id: 'btn-htmlent', icon: '&amp;', cls: 'htmlent', key: 'chip_entity' },
+  { id: 'btn-strescape', icon: '\\n', cls: 'strescape', key: 'chip_escape' },
+  { id: 'btn-querystr', icon: '?=', cls: 'querystr', key: 'chip_query' },
+  { id: 'btn-csv', icon: '📊', cls: 'csv', key: 'chip_csv' },
+  { id: 'btn-ts', icon: 'TS', cls: 'ts', key: 'chip_ts' },
+  { id: 'btn-textdiff', icon: '≈', cls: 'textdiff', key: 'chip_textdiff' },
+];
+toolsGrid.innerHTML = toolCards.map(c =>
+  `<button class="tool-card ${c.cls}" id="${c.id}"><span class="tool-card-icon">${c.icon}</span><span class="tool-card-label">${tr(c.key as LangKey)}</span></button>`
+).join('');
+app.appendChild(toolsGrid);
 
 // ========== Toolbar ==========
 const toolbar = document.createElement('div');
@@ -533,6 +535,7 @@ function openModal(title: string, bodyHtml: string, actionLabel: string, handler
 function closeModal() {
   modal.classList.remove('show');
   currentModalHandler = null;
+  showEditor();
 }
 
 document.getElementById('modal-cancel')!.addEventListener('click', closeModal);
@@ -555,7 +558,29 @@ function showToast(message: string) {
 // ========== Editor ==========
 const editorWrapper = document.createElement('div');
 editorWrapper.className = 'editor-wrapper';
+editorWrapper.style.display = 'none';
 app.appendChild(editorWrapper);
+
+// Initially hide toolbar
+toolbar.style.display = 'none';
+
+// ========== View Toggle ==========
+function showHome() {
+  toolsGrid.style.display = '';
+  toolbar.style.display = 'none';
+  editorWrapper.style.display = 'none';
+  document.getElementById('btn-home')!.style.display = 'none';
+}
+
+function showEditor() {
+  toolsGrid.style.display = 'none';
+  toolbar.style.display = '';
+  editorWrapper.style.display = '';
+  document.getElementById('btn-home')!.style.display = '';
+}
+
+document.getElementById('btn-home')!.addEventListener('click', showHome);
+document.getElementById('btn-home')!.style.display = 'none';
 
 // ========== Footer ==========
 const footer = document.createElement('footer');
@@ -617,6 +642,7 @@ function getFormattedContent(): string {
 
 // ========== JSON Button (return to editor) ==========
 document.getElementById('btn-json')!.addEventListener('click', () => {
+  showEditor();
   editor.set({ json: sampleJson });
   showToast(tr('json_editor'));
 });
@@ -741,6 +767,7 @@ document.getElementById('btn-timestamp')!.addEventListener('click', () => {
 
 // UUID
 document.getElementById('btn-uuid')!.addEventListener('click', () => {
+  showEditor();
   const uuids = generateUUIDs(5);
   editor.set({ json: { generated: uuids, count: uuids.length, version: 'v4 (random)' } });
   showToast(tr('uuids_generated'));
@@ -773,6 +800,7 @@ document.getElementById('btn-yaml')!.addEventListener('click', () => {
 
 // JSON Schema
 document.getElementById('btn-schema')!.addEventListener('click', () => {
+  showEditor();
   try {
     const schema = generateJsonSchema(getTextContent());
     editor.set({ json: schema });
@@ -1098,10 +1126,10 @@ const toolbarMap: Record<string, { label: LangKey; tip: LangKey }> = {
 
 function applyLanguage() {
   document.getElementById('lang-switch')!.textContent = lang.toUpperCase();
-  // Tool chips
+  // Tool cards
   for (const [id, key] of Object.entries(chipMap)) {
-    const span = document.getElementById(id)?.querySelector('span');
-    if (span) span.textContent = tr(key);
+    const label = document.getElementById(id)?.querySelector('.tool-card-label');
+    if (label) label.textContent = tr(key);
   }
   // Toolbar buttons
   for (const [id, keys] of Object.entries(toolbarMap)) {
