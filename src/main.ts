@@ -532,13 +532,13 @@ function openModal(title: string, bodyHtml: string, actionLabel: string, handler
   if (firstInput) setTimeout(() => firstInput.focus(), 50);
 }
 
-function closeModal() {
+function closeModal(goHome = true) {
   modal.classList.remove('show');
   currentModalHandler = null;
-  showEditor();
+  if (goHome) showHome(); else showEditor();
 }
 
-document.getElementById('modal-cancel')!.addEventListener('click', closeModal);
+document.getElementById('modal-cancel')!.addEventListener('click', () => closeModal());
 modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 modalAction.addEventListener('click', () => { if (currentModalHandler) currentModalHandler(); });
 
@@ -709,7 +709,7 @@ document.getElementById('btn-jwt-header')!.addEventListener('click', () => {
   openModal(tr('title_jwt'), `<textarea id="tool-input" placeholder="${tr('ph_jwt')}" rows="4"></textarea>`, tr('btn_decode'), () => {
     const v = (document.getElementById('tool-input') as HTMLTextAreaElement).value.trim();
     if (!v) { showToast(tr('paste_jwt')); return; }
-    try { editor.set({ json: decodeJwt(v) }); closeModal(); showToast(tr('jwt_decoded')); }
+    try { editor.set({ json: decodeJwt(v) }); closeModal(false); showToast(tr('jwt_decoded')); }
     catch (e) { showToast(e instanceof Error ? e.message : 'Error'); }
   });
 });
@@ -728,7 +728,7 @@ document.getElementById('btn-base64')!.addEventListener('click', () => {
     try {
       const result = dir === 'encode' ? base64Encode(v) : base64Decode(v);
       editor.set({ text: JSON.stringify({ input: v, direction: dir, result }, null, 2) });
-      closeModal(); showToast(dir === 'encode' ? tr('base64_encoded') : tr('base64_decoded'));
+      closeModal(false); showToast(dir === 'encode' ? tr('base64_encoded') : tr('base64_decoded'));
     } catch { showToast(tr('error_invalid_data')); }
   });
 });
@@ -747,7 +747,7 @@ document.getElementById('btn-url')!.addEventListener('click', () => {
     try {
       const result = dir === 'encode' ? urlEncode(v) : urlDecode(v);
       editor.set({ text: JSON.stringify({ input: v, direction: dir, result }, null, 2) });
-      closeModal(); showToast(dir === 'encode' ? tr('url_encoded') : tr('url_decoded'));
+      closeModal(false); showToast(dir === 'encode' ? tr('url_encoded') : tr('url_decoded'));
     } catch { showToast('Error'); }
   });
 });
@@ -760,7 +760,7 @@ document.getElementById('btn-timestamp')!.addEventListener('click', () => {
     const v = (document.getElementById('tool-input') as HTMLTextAreaElement).value.trim();
     try {
       editor.set({ json: JSON.parse(v ? timestampToDate(v) : dateToTimestamp()) });
-      closeModal(); showToast(v ? tr('timestamp_converted') : tr('current_time'));
+      closeModal(false); showToast(v ? tr('timestamp_converted') : tr('current_time'));
     } catch { showToast(tr('invalid_timestamp')); }
   });
 });
@@ -788,11 +788,11 @@ document.getElementById('btn-yaml')!.addEventListener('click', () => {
       if (dir === 'json-to-yaml') {
         const yamlStr = jsonToYaml(v);
         editor.set({ text: yamlStr });
-        closeModal(); showToast(tr('converted_yaml'));
+        closeModal(false); showToast(tr('converted_yaml'));
       } else {
         const jsonStr = yamlToJson(v);
         editor.set({ json: JSON.parse(jsonStr) });
-        closeModal(); showToast(tr('converted_json'));
+        closeModal(false); showToast(tr('converted_json'));
       }
     } catch { showToast(tr('conversion_error')); }
   });
@@ -817,7 +817,7 @@ document.getElementById('btn-hash')!.addEventListener('click', () => {
     if (!v) { showToast(tr('enter_text')); return; }
     generateHashes(v).then((hashes) => {
       editor.set({ json: hashes });
-      closeModal(); showToast(tr('hashes_generated'));
+      closeModal(false); showToast(tr('hashes_generated'));
     });
   });
 });
@@ -837,7 +837,7 @@ document.getElementById('btn-regex')!.addEventListener('click', () => {
     if (!pattern) { showToast(tr('enter_regex')); return; }
     try {
       editor.set({ json: testRegex(pattern, flags, text) });
-      closeModal(); showToast(tr('regex_tested'));
+      closeModal(false); showToast(tr('regex_tested'));
     } catch (e) { showToast(e instanceof Error ? e.message : 'Invalid regex'); }
   });
 });
@@ -852,7 +852,7 @@ document.getElementById('btn-color')!.addEventListener('click', () => {
     try {
       const result = convertColor(v);
       editor.set({ json: result });
-      closeModal(); showToast(tr('color_converted'));
+      closeModal(false); showToast(tr('color_converted'));
     } catch (e) { showToast(e instanceof Error ? e.message : 'Error'); }
   });
 });
@@ -868,7 +868,7 @@ document.getElementById('btn-diff')!.addEventListener('click', () => {
     if (!v1 || !v2) { showToast(tr('fill_both')); return; }
     try {
       editor.set({ json: jsonDiff(v1, v2) });
-      closeModal(); showToast(tr('comparison_complete'));
+      closeModal(false); showToast(tr('comparison_complete'));
     } catch { showToast(tr('error_invalid_json')); }
   });
 });
@@ -884,7 +884,7 @@ document.getElementById('btn-mock')!.addEventListener('click', () => {
     const count = Math.min(100, Math.max(1, Number((document.getElementById('tool-input') as HTMLInputElement).value) || 10));
     const data = generateMockUsers(count);
     editor.set({ json: data });
-    closeModal(); showToast(`${count} ${tr('records_generated')}`);
+    closeModal(false); showToast(`${count} ${tr('records_generated')}`);
   });
 });
 
@@ -897,7 +897,7 @@ document.getElementById('btn-cron')!.addEventListener('click', () => {
     if (!v) { showToast(tr('enter_cron')); return; }
     try {
       editor.set({ json: parseCron(v) });
-      closeModal(); showToast(tr('cron_parsed'));
+      closeModal(false); showToast(tr('cron_parsed'));
     } catch (e) { showToast(e instanceof Error ? e.message : 'Error'); }
   });
 });
@@ -926,7 +926,7 @@ document.getElementById('btn-password')!.addEventListener('click', () => {
     const symbols = (document.querySelector('input[name="pw-syms"]') as HTMLInputElement).checked;
     try {
       editor.set({ json: generatePasswords(length, count, { uppercase, lowercase, numbers, symbols }) });
-      closeModal(); showToast(tr('passwords_generated'));
+      closeModal(false); showToast(tr('passwords_generated'));
     } catch (e) { showToast(e instanceof Error ? e.message : 'Error'); }
   });
 });
@@ -948,7 +948,7 @@ document.getElementById('btn-lorem')!.addEventListener('click', () => {
     const mode = (document.querySelector('input[name="loremmode"]:checked') as HTMLInputElement).value as 'words' | 'sentences' | 'paragraphs';
     const result = generateLoremIpsum(mode, count);
     editor.set({ json: result });
-    closeModal(); showToast(tr('lorem_generated'));
+    closeModal(false); showToast(tr('lorem_generated'));
   });
 });
 
@@ -968,7 +968,7 @@ document.getElementById('btn-numbase')!.addEventListener('click', () => {
     const base = parseInt((document.querySelector('input[name="numbase"]:checked') as HTMLInputElement).value);
     try {
       editor.set({ json: convertNumberBase(v, base) });
-      closeModal(); showToast(tr('number_converted'));
+      closeModal(false); showToast(tr('number_converted'));
     } catch (e) { showToast(e instanceof Error ? e.message : 'Error'); }
   });
 });
@@ -981,7 +981,7 @@ document.getElementById('btn-casecvt')!.addEventListener('click', () => {
     const v = (document.getElementById('tool-input') as HTMLInputElement).value.trim();
     if (!v) { showToast(tr('enter_text')); return; }
     editor.set({ json: convertCase(v) });
-    closeModal(); showToast(tr('case_converted'));
+    closeModal(false); showToast(tr('case_converted'));
   });
 });
 
@@ -998,7 +998,7 @@ document.getElementById('btn-htmlent')!.addEventListener('click', () => {
     const dir = (document.querySelector('input[name="htmldir"]:checked') as HTMLInputElement).value;
     const result = dir === 'encode' ? htmlEntityEncode(v) : htmlEntityDecode(v);
     editor.set({ json: { input: v, direction: dir, result } });
-    closeModal(); showToast(dir === 'encode' ? tr('html_encoded') : tr('html_decoded'));
+    closeModal(false); showToast(dir === 'encode' ? tr('html_encoded') : tr('html_decoded'));
   });
 });
 
@@ -1015,7 +1015,7 @@ document.getElementById('btn-strescape')!.addEventListener('click', () => {
     const dir = (document.querySelector('input[name="escdir"]:checked') as HTMLInputElement).value;
     const result = dir === 'escape' ? escapeString(v) : unescapeString(v);
     editor.set({ json: result });
-    closeModal(); showToast(dir === 'escape' ? tr('string_escaped') : tr('string_unescaped'));
+    closeModal(false); showToast(dir === 'escape' ? tr('string_escaped') : tr('string_unescaped'));
   });
 });
 
@@ -1033,7 +1033,7 @@ document.getElementById('btn-querystr')!.addEventListener('click', () => {
     try {
       const result = dir === 'qs-to-json' ? queryStringToJson(v) : jsonToQueryString(v);
       editor.set({ json: result });
-      closeModal(); showToast(tr('converted'));
+      closeModal(false); showToast(tr('converted'));
     } catch (e) { showToast(e instanceof Error ? e.message : 'Error'); }
   });
 });
@@ -1057,11 +1057,11 @@ document.getElementById('btn-csv')!.addEventListener('click', () => {
     try {
       if (dir === 'csv-to-json') {
         editor.set({ json: csvToJson(v, delim) });
-        closeModal(); showToast(tr('csv_to_json_done'));
+        closeModal(false); showToast(tr('csv_to_json_done'));
       } else {
         const result = jsonToCsv(v, delim);
         editor.set({ text: result.csv });
-        closeModal(); showToast(tr('json_to_csv_done'));
+        closeModal(false); showToast(tr('json_to_csv_done'));
       }
     } catch (e) { showToast(e instanceof Error ? e.message : tr('csv_error')); }
   });
@@ -1082,7 +1082,7 @@ document.getElementById('btn-ts')!.addEventListener('click', () => {
     try {
       const result = jsonToTypeScript(v, rootName);
       editor.set({ text: result.typescript });
-      closeModal(); showToast(tr('ts_generated'));
+      closeModal(false); showToast(tr('ts_generated'));
     } catch (e) { showToast(e instanceof Error ? e.message : tr('error_invalid_json')); }
   });
 });
@@ -1097,7 +1097,7 @@ document.getElementById('btn-textdiff')!.addEventListener('click', () => {
     const v2 = (document.getElementById('diff-text-2') as HTMLTextAreaElement).value;
     if (!v1 || !v2) { showToast(tr('fill_both')); return; }
     editor.set({ json: textDiff(v1, v2) });
-    closeModal(); showToast(tr('text_diff_done'));
+    closeModal(false); showToast(tr('text_diff_done'));
   });
 });
 
