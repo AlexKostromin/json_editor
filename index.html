@@ -23,6 +23,7 @@
 
     <!-- Hreflang -->
     <link rel="alternate" hreflang="en" href="https://alexkostromin.github.io/json_editor/" />
+    <link rel="alternate" hreflang="ru" href="https://alexkostromin.github.io/json_editor/" />
     <link rel="alternate" hreflang="x-default" href="https://alexkostromin.github.io/json_editor/" />
 
     <!-- PWA -->
@@ -178,6 +179,73 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Yes, DevTools Online is a Progressive Web App (PWA). You can install it as an app on your computer or phone via the browser menu. It even works offline."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Structured Data: FAQ (Russian) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "inLanguage": "ru",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Как отформатировать JSON онлайн?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Вставьте JSON в редактор DevTools Online и нажмите кнопку «Форматировать». Редактор автоматически добавит отступы и переносы строк. Поддерживаются режимы дерева, текста и таблицы."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как декодировать JWT токен онлайн?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Откройте DevTools Online, нажмите «JWT» на панели инструментов, вставьте токен (начинается с eyJ...) и нажмите «Декодировать». Вы увидите заголовок и полезную нагрузку, временные поля (exp, iat, nbf) автоматически конвертируются в даты."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Безопасно ли использовать DevTools Online?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Да, полностью безопасно. Все инструменты работают локально в вашем браузере. Никакие данные не отправляются на сервер — ни JWT токены, ни JSON данные, ни хеши никогда не покидают ваш компьютер."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как парсить cron выражения онлайн?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Нажмите «Cron» на панели DevTools Online, введите cron выражение (например */5 * * * *) и нажмите «Разобрать». Инструмент покажет описание на человеческом языке и следующие 5 запланированных запусков."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как сгенерировать безопасный пароль онлайн?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Нажмите «Пароль» в DevTools Online, настройте длину и набор символов (заглавные, строчные, цифры, спецсимволы) и нажмите «Генерировать». Пароли создаются криптографически безопасно через Web Crypto API прямо в браузере."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как конвертировать системы счисления онлайн?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Нажмите «Базис» в DevTools Online, введите число, выберите исходную систему счисления (десятичная, шестнадцатеричная, двоичная, восьмеричная) и нажмите «Конвертировать». Результат покажет число во всех системах счисления."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Можно ли установить DevTools Online как приложение?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Да, DevTools Online — это прогрессивное веб-приложение (PWA). Вы можете установить его на компьютер или телефон через меню браузера. Оно работает даже без интернета."
           }
         }
       ]
