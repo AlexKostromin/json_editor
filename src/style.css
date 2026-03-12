@@ -259,6 +259,9 @@ header {
 .tool-chip.htmlent:hover { color: #fca5a5; border-color: rgba(252, 165, 165, 0.3); background: rgba(252, 165, 165, 0.08); }
 .tool-chip.strescape:hover { color: #c4b5fd; border-color: rgba(196, 181, 253, 0.3); background: rgba(196, 181, 253, 0.08); }
 .tool-chip.querystr:hover { color: #67e8f9; border-color: rgba(103, 232, 249, 0.3); background: rgba(103, 232, 249, 0.08); }
+.tool-chip.csv:hover { color: #a3e635; border-color: rgba(163, 230, 53, 0.3); background: rgba(163, 230, 53, 0.08); }
+.tool-chip.ts:hover { color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); background: rgba(56, 189, 248, 0.08); }
+.tool-chip.textdiff:hover { color: #e879f9; border-color: rgba(232, 121, 249, 0.3); background: rgba(232, 121, 249, 0.08); }
 
 /* ========== Footer ========== */
 .app-footer {

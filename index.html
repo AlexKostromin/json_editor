@@ -38,7 +38,7 @@
     <!-- Open Graph (Facebook, Telegram, VK, Discord) -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://alexkostromin.github.io/json_editor/" />
-    <meta property="og:title" content="DevTools Online — 20 Free Developer Tools" />
+    <meta property="og:title" content="DevTools Online — 23 Free Developer Tools" />
     <meta property="og:description" content="JSON Editor, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock, Cron, Password, Lorem, Base Converter, Case, HTML Entity, Escape, Query String — free in your browser." />
     <meta property="og:image" content="https://alexkostromin.github.io/json_editor/og-image.png" />
     <meta property="og:image:width" content="1200" />
@@ -49,7 +49,7 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="DevTools Online — 20 Free Developer Tools" />
+    <meta name="twitter:title" content="DevTools Online — 23 Free Developer Tools" />
     <meta name="twitter:description" content="JSON, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock, Cron, Password, Lorem, Base, Case, Entity, Escape, Query — free in your browser." />
     <meta name="twitter:image" content="https://alexkostromin.github.io/json_editor/og-image.png" />
     <meta name="twitter:image:alt" content="DevTools Online" />
@@ -61,7 +61,7 @@
       "@type": "WebApplication",
       "name": "DevTools Online",
       "url": "https://alexkostromin.github.io/json_editor/",
-      "description": "20 free online developer tools: JSON editor, JWT decoder, Base64, URL, Timestamp, UUID, YAML, JSON Schema, Hash, Regex, Color, JSON Diff, Mock Data, Cron Parser, Password Generator, Lorem Ipsum, Number Base Converter, Case Converter, HTML Entity Encoder, String Escape, Query String Converter.",
+      "description": "23 free online developer tools: JSON editor, JWT decoder, Base64, URL, Timestamp, UUID, YAML, JSON Schema, Hash, Regex, Color, JSON Diff, Mock Data, Cron Parser, Password Generator, Lorem Ipsum, Number Base Converter, Case Converter, HTML Entity Encoder, String Escape, Query String Converter.",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Any",
       "offers": {
@@ -91,7 +91,10 @@
         "Case converter (camelCase, snake_case, kebab-case)",
         "HTML entity encoder/decoder",
         "String escape/unescape",
-        "Query string to JSON converter"
+        "Query string to JSON converter",
+        "CSV to JSON converter",
+        "JSON to TypeScript interfaces generator",
+        "Text diff comparison"
       ],
       "screenshot": "https://alexkostromin.github.io/json_editor/og-image.png",
       "inLanguage": "en",
@@ -277,7 +280,7 @@
     <div id="app"></div>
     <noscript>
       <h1>DevTools Online — Developer Tools</h1>
-      <p>20 free online tools: JSON editor, JWT decoder, Base64, URL, Timestamp, UUID, YAML, JSON Schema, Hash, Regex, Color, JSON Diff, Mock Data, Cron Parser, Password Generator, Lorem Ipsum, Number Base Converter, Case Converter, HTML Entity, String Escape, Query String.</p>
+      <p>23 free online tools: JSON editor, JWT decoder, Base64, URL, Timestamp, UUID, YAML, JSON Schema, Hash, Regex, Color, JSON Diff, Mock Data, Cron Parser, Password Generator, Lorem Ipsum, Number Base Converter, Case Converter, HTML Entity, String Escape, Query String.</p>
       <p>All tools run in your browser — no data is sent to any server.</p>
       <p>JavaScript is required.</p>
 
@@ -343,12 +346,21 @@
 
       <h2>Query String ↔ JSON</h2>
       <p>Convert between URL query strings and JSON objects.</p>
+
+      <h2>CSV ↔ JSON Converter</h2>
+      <p>Convert CSV data to JSON and back. Supports custom delimiters and quoted fields.</p>
+
+      <h2>JSON → TypeScript</h2>
+      <p>Generate TypeScript interfaces from JSON data automatically.</p>
+
+      <h2>Text Diff</h2>
+      <p>Compare two texts and see added, removed, and unchanged lines.</p>
     </noscript>
 
     <!-- SEO content (visible to crawlers, hidden visually via CSS) -->
     <footer id="seo-footer" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
       <h2>DevTools Online — Free Developer Tools</h2>
-      <p>DevTools Online is a collection of 20 free online tools for web developers, backend engineers, DevOps and QA specialists. All tools run directly in your browser, no data is sent to any server. Can be installed as a PWA app for offline use.</p>
+      <p>DevTools Online is a collection of 23 free online tools for web developers, backend engineers, DevOps and QA specialists. All tools run directly in your browser, no data is sent to any server. Can be installed as a PWA app for offline use.</p>
 
       <h2>Online JSON Editor</h2>
       <p>Free JSON Editor Online with syntax highlighting, formatting, validation, and tree view. Supports tree, text, and table modes for working with JSON data of any size. Upload and download files, paste from clipboard.</p>
@@ -412,6 +424,15 @@
 
       <h2>Query String ↔ JSON Converter</h2>
       <p>Online converter between URL query strings and JSON objects. Parse ?foo=1&bar=2 into structured JSON and vice versa. Supports duplicate keys as arrays. Essential for API debugging and URL parameter analysis.</p>
+
+      <h2>CSV ↔ JSON Converter</h2>
+      <p>Online CSV to JSON and JSON to CSV converter. Parses CSV with custom delimiters, handles quoted fields and escaped characters. Convert spreadsheet data to JSON arrays and back. Essential for data migration, API testing, and ETL pipelines.</p>
+
+      <h2>JSON → TypeScript Interfaces</h2>
+      <p>Automatically generate TypeScript interfaces from JSON data. Infers types for strings, numbers, booleans, arrays, and nested objects. Creates clean, exportable interface definitions. Essential for frontend developers working with APIs.</p>
+
+      <h2>Text Diff — Compare Two Texts</h2>
+      <p>Online text comparison tool using LCS (Longest Common Subsequence) algorithm. Shows added, removed, and unchanged lines with unified diff format. Compare any text, code, configs, or documents. Complements the JSON Diff tool for non-JSON content.</p>
     </footer>
     <script type="module" src="/src/main.ts"></script>
   </body>

@@ -7,6 +7,7 @@ import {
   parseCron, generatePasswords, generateLoremIpsum, convertNumberBase,
   convertCase, htmlEntityEncode, htmlEntityDecode, escapeString, unescapeString,
   queryStringToJson, jsonToQueryString,
+  csvToJson, jsonToCsv, jsonToTypeScript, textDiff,
 } from './tools';
 import './style.css';
 
@@ -14,7 +15,7 @@ import './style.css';
 const t = {
   en: {
     // Header/Footer
-    '20_tools': '20 tools',
+    '20_tools': '23 tools',
     'runs_in_browser': 'Everything runs in your browser',
     'visits': 'Visits',
     // Toolbar buttons
@@ -48,6 +49,9 @@ const t = {
     'chip_entity': 'Entity',
     'chip_escape': 'Escape',
     'chip_query': 'Query',
+    'chip_csv': 'CSV',
+    'chip_ts': 'TS Types',
+    'chip_textdiff': 'TextDiff',
     // Toast messages
     'json_formatted': 'JSON formatted',
     'json_minified': 'JSON minified',
@@ -98,6 +102,12 @@ const t = {
     'converted': 'Converted',
     'json_editor': 'JSON Editor',
     'records_generated': 'records generated',
+    'csv_to_json_done': 'CSV converted to JSON',
+    'json_to_csv_done': 'JSON converted to CSV',
+    'csv_error': 'CSV parsing error',
+    'ts_generated': 'TypeScript interfaces generated',
+    'text_diff_done': 'Text comparison complete',
+    'enter_root_name': 'Root interface name:',
     // Modal titles
     'title_jwt': 'JWT Decoder',
     'title_base64': 'Base64 Encode / Decode',
@@ -117,6 +127,9 @@ const t = {
     'title_htmlent': 'HTML Entity Encode / Decode',
     'title_strescape': 'String Escape / Unescape',
     'title_querystr': 'Query String ↔ JSON',
+    'title_csv': 'CSV ↔ JSON Converter',
+    'title_ts': 'JSON → TypeScript Interfaces',
+    'title_textdiff': 'Text Diff — Compare Two Texts',
     // Placeholders
     'ph_jwt': 'Paste JWT token (eyJhbG...)...',
     'ph_base64': 'Enter text or Base64 string...',
@@ -139,6 +152,12 @@ const t = {
     'ph_htmlent': 'Enter text or HTML entities...',
     'ph_strescape': 'Enter string to escape or unescape...',
     'ph_querystr': 'Query string (?foo=1&bar=2) or JSON ...',
+    'ph_csv': 'Paste CSV data with headers...',
+    'ph_csv_json': 'Paste JSON array...',
+    'ph_ts': 'Paste JSON to generate TypeScript interfaces...',
+    'ph_textdiff1': 'First text...',
+    'ph_textdiff2': 'Second text...',
+    'ph_delimiter': 'Delimiter:',
     // Modal button labels
     'btn_encode': 'Encode',
     'btn_decode': 'Decode',
@@ -161,6 +180,8 @@ const t = {
     'btn_json_query': 'JSON → Query',
     'btn_json_yaml': 'JSON → YAML',
     'btn_yaml_json': 'YAML → JSON',
+    'btn_csv_to_json': 'CSV → JSON',
+    'btn_json_to_csv': 'JSON → CSV',
     // Tooltip
     'tip_format': 'Format JSON',
     'tip_minify': 'Minify to one line',
@@ -173,7 +194,7 @@ const t = {
   },
   ru: {
     // Header/Footer
-    '20_tools': '20 инструментов',
+    '20_tools': '23 инструмента',
     'runs_in_browser': 'Всё работает в браузере',
     'visits': 'Посещения',
     // Toolbar buttons
@@ -207,6 +228,9 @@ const t = {
     'chip_entity': 'Сущн.',
     'chip_escape': 'Экран.',
     'chip_query': 'Запрос',
+    'chip_csv': 'CSV',
+    'chip_ts': 'TS Типы',
+    'chip_textdiff': 'ТекстДифф',
     // Toast messages
     'json_formatted': 'JSON отформатирован',
     'json_minified': 'JSON сжат',
@@ -257,6 +281,12 @@ const t = {
     'converted': 'Конвертировано',
     'json_editor': 'JSON Редактор',
     'records_generated': 'записей сгенерировано',
+    'csv_to_json_done': 'CSV конвертирован в JSON',
+    'json_to_csv_done': 'JSON конвертирован в CSV',
+    'csv_error': 'Ошибка парсинга CSV',
+    'ts_generated': 'TypeScript интерфейсы сгенерированы',
+    'text_diff_done': 'Сравнение текста завершено',
+    'enter_root_name': 'Имя корневого интерфейса:',
     // Modal titles
     'title_jwt': 'Декодер JWT',
     'title_base64': 'Base64 Кодирование / Декодирование',
@@ -276,6 +306,9 @@ const t = {
     'title_htmlent': 'HTML Сущности Кодирование / Декодирование',
     'title_strescape': 'Экранирование / Деэкранирование строк',
     'title_querystr': 'Строка запроса ↔ JSON',
+    'title_csv': 'CSV ↔ JSON Конвертер',
+    'title_ts': 'JSON → TypeScript Интерфейсы',
+    'title_textdiff': 'Сравнение двух текстов',
     // Placeholders
     'ph_jwt': 'Вставьте JWT токен (eyJhbG...)...',
     'ph_base64': 'Введите текст или Base64 строку...',
@@ -298,6 +331,12 @@ const t = {
     'ph_htmlent': 'Введите текст или HTML сущности...',
     'ph_strescape': 'Введите строку для экранирования...',
     'ph_querystr': 'Строка запроса (?foo=1&bar=2) или JSON ...',
+    'ph_csv': 'Вставьте CSV данные с заголовками...',
+    'ph_csv_json': 'Вставьте JSON массив...',
+    'ph_ts': 'Вставьте JSON для генерации TypeScript интерфейсов...',
+    'ph_textdiff1': 'Первый текст...',
+    'ph_textdiff2': 'Второй текст...',
+    'ph_delimiter': 'Разделитель:',
     // Modal button labels
     'btn_encode': 'Кодировать',
     'btn_decode': 'Декодировать',
@@ -320,6 +359,8 @@ const t = {
     'btn_json_query': 'JSON → Запрос',
     'btn_json_yaml': 'JSON → YAML',
     'btn_yaml_json': 'YAML → JSON',
+    'btn_csv_to_json': 'CSV → JSON',
+    'btn_json_to_csv': 'JSON → CSV',
     // Tooltip
     'tip_format': 'Форматировать JSON',
     'tip_minify': 'Сжать в одну строку',
@@ -402,6 +443,10 @@ toolsBar.innerHTML = `
   <button class="tool-chip htmlent" id="btn-htmlent">&amp;<span>Entity</span></button>
   <button class="tool-chip strescape" id="btn-strescape">\\n<span>Escape</span></button>
   <button class="tool-chip querystr" id="btn-querystr">?=<span>Query</span></button>
+  <div class="tools-sep"></div>
+  <button class="tool-chip csv" id="btn-csv">📊<span>CSV</span></button>
+  <button class="tool-chip ts" id="btn-ts">TS<span>TS Types</span></button>
+  <button class="tool-chip textdiff" id="btn-textdiff">≈<span>TextDiff</span></button>
 `;
 app.appendChild(toolsBar);
 
@@ -965,6 +1010,69 @@ document.getElementById('btn-querystr')!.addEventListener('click', () => {
   });
 });
 
+// CSV ↔ JSON
+document.getElementById('btn-csv')!.addEventListener('click', () => {
+  openModal(tr('title_csv'),
+    `<textarea id="tool-input" placeholder="${tr('ph_csv')}" rows="6"></textarea>
+     <div class="modal-field-group" style="margin-top:10px">
+       <label style="color:#94a3b8;font-size:13px">${tr('ph_delimiter')}</label>
+       <input id="csv-delim" type="text" value="," style="width:60px" />
+     </div>
+     <div class="modal-radio-group">
+       <label><input type="radio" name="csvdir" value="csv-to-json" checked /> ${tr('btn_csv_to_json')}</label>
+       <label><input type="radio" name="csvdir" value="json-to-csv" /> ${tr('btn_json_to_csv')}</label>
+     </div>`, tr('btn_convert'), () => {
+    const v = (document.getElementById('tool-input') as HTMLTextAreaElement).value;
+    if (!v.trim()) { showToast(tr('enter_data')); return; }
+    const delim = (document.getElementById('csv-delim') as HTMLInputElement).value || ',';
+    const dir = (document.querySelector('input[name="csvdir"]:checked') as HTMLInputElement).value;
+    try {
+      if (dir === 'csv-to-json') {
+        editor.set({ json: csvToJson(v, delim) });
+        closeModal(); showToast(tr('csv_to_json_done'));
+      } else {
+        const result = jsonToCsv(v, delim);
+        editor.set({ text: result.csv });
+        closeModal(); showToast(tr('json_to_csv_done'));
+      }
+    } catch (e) { showToast(e instanceof Error ? e.message : tr('csv_error')); }
+  });
+});
+
+// JSON → TypeScript
+document.getElementById('btn-ts')!.addEventListener('click', () => {
+  openModal(tr('title_ts'),
+    `<textarea id="tool-input" placeholder="${tr('ph_ts')}" rows="6"></textarea>
+     <div class="modal-field-group" style="margin-top:10px">
+       <label style="color:#94a3b8;font-size:13px">${tr('enter_root_name')}</label>
+       <input id="ts-root" type="text" value="Root" style="width:120px" />
+     </div>`,
+    tr('btn_generate'), () => {
+    const v = (document.getElementById('tool-input') as HTMLTextAreaElement).value.trim();
+    if (!v) { showToast(tr('enter_data')); return; }
+    const rootName = (document.getElementById('ts-root') as HTMLInputElement).value.trim() || 'Root';
+    try {
+      const result = jsonToTypeScript(v, rootName);
+      editor.set({ text: result.typescript });
+      closeModal(); showToast(tr('ts_generated'));
+    } catch (e) { showToast(e instanceof Error ? e.message : tr('error_invalid_json')); }
+  });
+});
+
+// Text Diff
+document.getElementById('btn-textdiff')!.addEventListener('click', () => {
+  openModal(tr('title_textdiff'),
+    `<textarea id="diff-text-1" placeholder="${tr('ph_textdiff1')}" rows="4"></textarea>
+     <textarea id="diff-text-2" placeholder="${tr('ph_textdiff2')}" rows="4" style="margin-top:8px"></textarea>`,
+    tr('btn_compare'), () => {
+    const v1 = (document.getElementById('diff-text-1') as HTMLTextAreaElement).value;
+    const v2 = (document.getElementById('diff-text-2') as HTMLTextAreaElement).value;
+    if (!v1 || !v2) { showToast(tr('fill_both')); return; }
+    editor.set({ json: textDiff(v1, v2) });
+    closeModal(); showToast(tr('text_diff_done'));
+  });
+});
+
 // ========== Language ==========
 const chipMap: Record<string, LangKey> = {
   'btn-json': 'chip_json', 'btn-jwt-header': 'chip_jwt', 'btn-base64': 'chip_base64',
@@ -974,6 +1082,7 @@ const chipMap: Record<string, LangKey> = {
   'btn-mock': 'chip_mock', 'btn-cron': 'chip_cron', 'btn-password': 'chip_password',
   'btn-lorem': 'chip_lorem', 'btn-numbase': 'chip_base', 'btn-casecvt': 'chip_case',
   'btn-htmlent': 'chip_entity', 'btn-strescape': 'chip_escape', 'btn-querystr': 'chip_query',
+  'btn-csv': 'chip_csv', 'btn-ts': 'chip_ts', 'btn-textdiff': 'chip_textdiff',
 };
 
 const toolbarMap: Record<string, { label: LangKey; tip: LangKey }> = {

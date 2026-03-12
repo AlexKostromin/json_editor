@@ -611,6 +611,193 @@ export function jsonToQueryString(jsonStr: string): Record<string, string> {
   return { json: jsonStr, query_string: qs, full_url_example: `https://example.com/?${qs}` };
 }
 
+// ========== CSV ↔ JSON ==========
+function parseCSVLine(line: string, delimiter: string): string[] {
+  const fields: string[] = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (i + 1 < line.length && line[i + 1] === '"') {
+          current += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        current += ch;
+      }
+    } else {
+      if (ch === '"') {
+        inQuotes = true;
+      } else if (ch === delimiter) {
+        fields.push(current);
+        current = '';
+      } else {
+        current += ch;
+      }
+    }
+  }
+  fields.push(current);
+  return fields;
+}
+
+export function csvToJson(csv: string, delimiter: string = ','): Record<string, unknown> {
+  const lines = csv.split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) throw new Error('CSV must have header + at least 1 row');
+  const headers = parseCSVLine(lines[0], delimiter);
+  const rows = lines.slice(1).map(line => {
+    const values = parseCSVLine(line, delimiter);
+    const obj: Record<string, string> = {};
+    headers.forEach((h, i) => { obj[h.trim()] = (values[i] || '').trim(); });
+    return obj;
+  });
+  return { rows, row_count: rows.length, columns: headers.map(h => h.trim()), column_count: headers.length };
+}
+
+export function jsonToCsv(jsonStr: string, delimiter: string = ','): Record<string, string> {
+  const data = JSON.parse(jsonStr);
+  const arr = Array.isArray(data) ? data : [data];
+  if (arr.length === 0) throw new Error('Empty array');
+  const headers = Object.keys(arr[0]);
+  const escapeField = (val: unknown): string => {
+    const str = String(val ?? '');
+    if (str.includes(delimiter) || str.includes('"') || str.includes('\n')) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  };
+  const lines = [headers.join(delimiter)];
+  for (const row of arr) {
+    lines.push(headers.map(h => escapeField((row as Record<string, unknown>)[h])).join(delimiter));
+  }
+  const csv = lines.join('\n');
+  return { csv, row_count: String(arr.length), column_count: String(headers.length) };
+}
+
+// ========== JSON to TypeScript ==========
+export function jsonToTypeScript(jsonStr: string, rootName: string = 'Root'): Record<string, string> {
+  const data = JSON.parse(jsonStr);
+  const interfaces: string[] = [];
+  const generated = new Set<string>();
+
+  function capitalize(s: string): string {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  function sanitizeName(s: string): string {
+    return s.replace(/[^a-zA-Z0-9_]/g, '_');
+  }
+
+  function inferType(value: unknown, name: string): string {
+    if (value === null || value === undefined) return 'null';
+    if (typeof value === 'string') return 'string';
+    if (typeof value === 'number') return Number.isInteger(value) ? 'number' : 'number';
+    if (typeof value === 'boolean') return 'boolean';
+    if (Array.isArray(value)) {
+      if (value.length === 0) return 'unknown[]';
+      const itemType = inferType(value[0], name + 'Item');
+      return `${itemType}[]`;
+    }
+    if (typeof value === 'object') {
+      const interfaceName = capitalize(sanitizeName(name));
+      generateInterface(value as Record<string, unknown>, interfaceName);
+      return interfaceName;
+    }
+    return 'unknown';
+  }
+
+  function generateInterface(obj: Record<string, unknown>, name: string): void {
+    if (generated.has(name)) return;
+    generated.add(name);
+    const lines = [`export interface ${name} {`];
+    for (const [key, value] of Object.entries(obj)) {
+      const safeName = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key) ? key : `"${key}"`;
+      const type = inferType(value, key);
+      lines.push(`  ${safeName}: ${type};`);
+    }
+    lines.push('}');
+    interfaces.push(lines.join('\n'));
+  }
+
+  if (Array.isArray(data)) {
+    if (data.length > 0 && typeof data[0] === 'object' && data[0] !== null) {
+      generateInterface(data[0] as Record<string, unknown>, rootName);
+      interfaces.unshift(`export type ${rootName}List = ${rootName}[];`);
+    } else {
+      const itemType = data.length > 0 ? inferType(data[0], 'Item') : 'unknown';
+      interfaces.push(`export type ${rootName} = ${itemType}[];`);
+    }
+  } else if (typeof data === 'object' && data !== null) {
+    generateInterface(data as Record<string, unknown>, rootName);
+  } else {
+    interfaces.push(`export type ${rootName} = ${typeof data};`);
+  }
+
+  const typescript = interfaces.join('\n\n');
+  return { typescript, interface_count: String(generated.size || 1) };
+}
+
+// ========== Text Diff ==========
+function lcsMatrix(a: string[], b: string[]): number[][] {
+  const m = a.length, n = b.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1] ? dp[i - 1][j - 1] + 1 : Math.max(dp[i - 1][j], dp[i][j - 1]);
+    }
+  }
+  return dp;
+}
+
+export function textDiff(text1: string, text2: string): Record<string, unknown> {
+  const lines1 = text1.split(/\r?\n/);
+  const lines2 = text2.split(/\r?\n/);
+  const dp = lcsMatrix(lines1, lines2);
+
+  const changes: Record<string, unknown>[] = [];
+  let i = lines1.length, j = lines2.length;
+  const result: { type: string; line: string; lineNum1?: number; lineNum2?: number }[] = [];
+
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && lines1[i - 1] === lines2[j - 1]) {
+      result.unshift({ type: 'equal', line: lines1[i - 1], lineNum1: i, lineNum2: j });
+      i--; j--;
+    } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+      result.unshift({ type: 'added', line: lines2[j - 1], lineNum2: j });
+      j--;
+    } else if (i > 0) {
+      result.unshift({ type: 'removed', line: lines1[i - 1], lineNum1: i });
+      i--;
+    }
+  }
+
+  for (const r of result) {
+    if (r.type !== 'equal') {
+      changes.push(r);
+    }
+  }
+
+  const added = changes.filter(c => c.type === 'added').length;
+  const removed = changes.filter(c => c.type === 'removed').length;
+
+  return {
+    total_changes: changes.length,
+    identical: changes.length === 0,
+    lines_added: added,
+    lines_removed: removed,
+    text1_lines: lines1.length,
+    text2_lines: lines2.length,
+    diff: result.map(r => {
+      const prefix = r.type === 'added' ? '+ ' : r.type === 'removed' ? '- ' : '  ';
+      return prefix + r.line;
+    }).join('\n'),
+    changes,
+  };
+}
+
 // ========== Mock Data Generator ==========
 const firstNames = ['James', 'Mary', 'John', 'Sarah', 'Robert', 'Emma', 'Michael', 'Olivia', 'William', 'Emily', 'David', 'Jessica', 'Daniel', 'Sophie', 'Thomas'];
 const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris'];
