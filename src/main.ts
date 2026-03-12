@@ -15,7 +15,7 @@ import './style.css';
 const t = {
   en: {
     // Header/Footer
-    '20_tools': '23 tools',
+    '20_tools': '24 tools',
     'runs_in_browser': 'Everything runs in your browser',
     'visits': 'Visits',
     // Toolbar buttons
@@ -195,7 +195,7 @@ const t = {
   },
   ru: {
     // Header/Footer
-    '20_tools': '23 инструмента',
+    '20_tools': '24 инструмента',
     'runs_in_browser': 'Всё работает в браузере',
     'visits': 'Посещения',
     // Toolbar buttons
