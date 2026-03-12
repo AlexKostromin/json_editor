@@ -419,6 +419,8 @@ header.innerHTML = `
 app.appendChild(header);
 
 // ========== Tools Grid (Home Screen) ==========
+const toolsHome = document.createElement('div');
+toolsHome.className = 'tools-home';
 const toolsGrid = document.createElement('div');
 toolsGrid.className = 'tools-grid';
 const toolCards = [
@@ -450,7 +452,9 @@ const toolCards = [
 toolsGrid.innerHTML = toolCards.map(c =>
   `<button class="tool-card ${c.cls}" id="${c.id}"><span class="tool-card-icon">${c.icon}</span><span class="tool-card-label">${c.label}</span></button>`
 ).join('');
-app.appendChild(toolsGrid);
+toolsHome.innerHTML = `<h1 class="tools-title">DevTools Online</h1><p class="tools-subtitle">24 developer tools — right in your browser</p>`;
+toolsHome.appendChild(toolsGrid);
+app.appendChild(toolsHome);
 
 // ========== Toolbar ==========
 const toolbar = document.createElement('div');
@@ -566,14 +570,14 @@ toolbar.style.display = 'none';
 
 // ========== View Toggle ==========
 function showHome() {
-  toolsGrid.style.display = '';
+  toolsHome.style.display = '';
   toolbar.style.display = 'none';
   editorWrapper.style.display = 'none';
   document.getElementById('btn-home')!.style.display = 'none';
 }
 
 function showEditor() {
-  toolsGrid.style.display = 'none';
+  toolsHome.style.display = 'none';
   toolbar.style.display = '';
   editorWrapper.style.display = '';
   document.getElementById('btn-home')!.style.display = '';

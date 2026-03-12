@@ -186,19 +186,39 @@ header {
 }
 
 /* ========== Tools Grid ========== */
-.tools-grid {
+.tools-home {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow-y: auto;
   padding: 24px;
+  background: var(--bg);
+}
+
+.tools-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--accent);
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.tools-subtitle {
+  font-size: 1.05rem;
+  color: #94a3b8;
+  margin: 0 0 32px;
+  text-align: center;
+}
+
+.tools-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 12px;
-  align-content: center;
-  justify-content: center;
   max-width: 900px;
-  margin: 0 auto;
   width: 100%;
-  background: var(--bg);
 }
 
 .tool-card {
