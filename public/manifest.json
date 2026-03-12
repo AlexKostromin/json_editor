@@ -1,7 +1,7 @@
 {
-  "name": "DevTools Online — Developer Tools",
-  "short_name": "DevTools",
-  "description": "12 free online tools: JSON Editor, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock Data",
+  "name": "Web Toolkit — Developer Tools",
+  "short_name": "Web Toolkit",
+  "description": "24 free online tools: JSON Editor, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock Data, Cron, Password, Lorem Ipsum, Num Base, Case, HTML Entity, Escape, Query String, CSV, TypeScript, Text Diff",
   "start_url": "/json_editor/",
   "scope": "/json_editor/",
   "display": "standalone",

@@ -404,7 +404,7 @@ const header = document.createElement('header');
 header.innerHTML = `
   <div class="header-left">
     <div class="logo-icon">&lt;/&gt;</div>
-    <h1>Dev<span>Tools</span></h1>
+    <h1>Web<span>Toolkit</span></h1>
     <div class="header-badge">Online</div>
   </div>
   <div class="header-right-section">
@@ -451,7 +451,7 @@ const toolCards = [
 toolsGrid.innerHTML = toolCards.map(c =>
   `<button class="tool-card ${c.cls}" id="${c.id}"><span class="tool-card-icon">${c.icon}</span><span class="tool-card-label">${c.label}</span></button>`
 ).join('');
-toolsHome.innerHTML = `<h1 class="tools-title">DevTools Online</h1><p class="tools-subtitle">24 developer tools — right in your browser</p>`;
+toolsHome.innerHTML = `<h1 class="tools-title">Web Toolkit</h1><p class="tools-subtitle">24 developer tools — right in your browser</p>`;
 toolsHome.appendChild(toolsGrid);
 app.appendChild(toolsHome);
 
@@ -595,7 +595,7 @@ document.querySelector('.header-left')!.addEventListener('click', showHome);
 const footer = document.createElement('footer');
 footer.className = 'app-footer';
 footer.innerHTML = `
-  <span>DevTools Online</span>
+  <span>Web Toolkit</span>
   <span class="footer-sep">·</span>
   <span id="footer-tools">${tr('20_tools')}</span>
   <span class="footer-sep">·</span>
@@ -620,7 +620,7 @@ setInterval(() => {
 
 // ========== Sample data ==========
 const sampleJson = {
-  name: 'DevTools Online',
+  name: 'Web Toolkit',
   description: 'Online developer tools',
   version: '2.0.0',
   features: ['tree view', 'text mode', 'table mode', 'search', 'formatting'],
