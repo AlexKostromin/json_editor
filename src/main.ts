@@ -4,6 +4,9 @@ import {
   timestampToDate, dateToTimestamp, generateUUIDs, decodeJwt,
   jsonToYaml, yamlToJson, generateJsonSchema, generateHashes,
   testRegex, convertColor, jsonDiff, generateMockUsers,
+  parseCron, generatePasswords, generateLoremIpsum, convertNumberBase,
+  convertCase, htmlEntityEncode, htmlEntityDecode, escapeString, unescapeString,
+  queryStringToJson, jsonToQueryString,
 } from './tools';
 import './style.css';
 
@@ -59,6 +62,15 @@ toolsBar.innerHTML = `
   <button class="tool-chip color" id="btn-color">●<span>Color</span></button>
   <button class="tool-chip diff" id="btn-diff">≠<span>Diff</span></button>
   <button class="tool-chip mock" id="btn-mock">⊞<span>Mock</span></button>
+  <div class="tools-sep"></div>
+  <button class="tool-chip cron" id="btn-cron">⏲<span>Cron</span></button>
+  <button class="tool-chip password" id="btn-password">🔑<span>Password</span></button>
+  <button class="tool-chip lorem" id="btn-lorem">Aa<span>Lorem</span></button>
+  <button class="tool-chip numbase" id="btn-numbase">0x<span>Base</span></button>
+  <button class="tool-chip casecvt" id="btn-casecvt">Aa<span>Case</span></button>
+  <button class="tool-chip htmlent" id="btn-htmlent">&amp;<span>Entity</span></button>
+  <button class="tool-chip strescape" id="btn-strescape">\\n<span>Escape</span></button>
+  <button class="tool-chip querystr" id="btn-querystr">?=<span>Query</span></button>
 `;
 app.appendChild(toolsBar);
 
@@ -177,7 +189,7 @@ localStorage.setItem('devtools-visits', String(visitCount));
 footer.innerHTML = `
   <span>DevTools Online</span>
   <span class="footer-sep">·</span>
-  <span>12 tools</span>
+  <span>20 tools</span>
   <span class="footer-sep">·</span>
   <span>Everything runs in your browser</span>
   <span class="footer-sep">·</span>
@@ -464,6 +476,156 @@ document.getElementById('btn-mock')!.addEventListener('click', () => {
     const data = generateMockUsers(count);
     editor.set({ json: data });
     closeModal(); showToast(`${count} records generated`);
+  });
+});
+
+// Cron Parser
+document.getElementById('btn-cron')!.addEventListener('click', () => {
+  openModal('Cron Expression Parser',
+    '<input id="tool-input" type="text" placeholder="Cron expression (e.g. */5 * * * *)" />',
+    'Parse', () => {
+    const v = (document.getElementById('tool-input') as HTMLInputElement).value.trim();
+    if (!v) { showToast('Enter cron expression'); return; }
+    try {
+      editor.set({ json: parseCron(v) });
+      closeModal(); showToast('Cron parsed');
+    } catch (e) { showToast(e instanceof Error ? e.message : 'Error'); }
+  });
+});
+
+// Password Generator
+document.getElementById('btn-password')!.addEventListener('click', () => {
+  openModal('Password Generator',
+    `<div class="modal-field-group">
+       <label style="color:#94a3b8;font-size:13px">Length:</label>
+       <input id="pw-length" type="number" value="16" min="4" max="128" style="width:80px" />
+       <label style="color:#94a3b8;font-size:13px">Count:</label>
+       <input id="pw-count" type="number" value="5" min="1" max="20" style="width:80px" />
+     </div>
+     <div class="modal-radio-group" style="flex-wrap:wrap">
+       <label><input type="checkbox" name="pw-upper" checked /> A-Z</label>
+       <label><input type="checkbox" name="pw-lower" checked /> a-z</label>
+       <label><input type="checkbox" name="pw-nums" checked /> 0-9</label>
+       <label><input type="checkbox" name="pw-syms" checked /> !@#$</label>
+     </div>`,
+    'Generate', () => {
+    const length = Math.min(128, Math.max(4, Number((document.getElementById('pw-length') as HTMLInputElement).value) || 16));
+    const count = Math.min(20, Math.max(1, Number((document.getElementById('pw-count') as HTMLInputElement).value) || 5));
+    const uppercase = (document.querySelector('input[name="pw-upper"]') as HTMLInputElement).checked;
+    const lowercase = (document.querySelector('input[name="pw-lower"]') as HTMLInputElement).checked;
+    const numbers = (document.querySelector('input[name="pw-nums"]') as HTMLInputElement).checked;
+    const symbols = (document.querySelector('input[name="pw-syms"]') as HTMLInputElement).checked;
+    try {
+      editor.set({ json: generatePasswords(length, count, { uppercase, lowercase, numbers, symbols }) });
+      closeModal(); showToast('Passwords generated');
+    } catch (e) { showToast(e instanceof Error ? e.message : 'Error'); }
+  });
+});
+
+// Lorem Ipsum Generator
+document.getElementById('btn-lorem')!.addEventListener('click', () => {
+  openModal('Lorem Ipsum Generator',
+    `<div class="modal-field-group">
+       <label style="color:#94a3b8;font-size:13px">Count:</label>
+       <input id="tool-input" type="number" value="5" min="1" max="100" style="width:80px" />
+     </div>
+     <div class="modal-radio-group">
+       <label><input type="radio" name="loremmode" value="paragraphs" checked /> Paragraphs</label>
+       <label><input type="radio" name="loremmode" value="sentences" /> Sentences</label>
+       <label><input type="radio" name="loremmode" value="words" /> Words</label>
+     </div>`,
+    'Generate', () => {
+    const count = Math.min(100, Math.max(1, Number((document.getElementById('tool-input') as HTMLInputElement).value) || 5));
+    const mode = (document.querySelector('input[name="loremmode"]:checked') as HTMLInputElement).value as 'words' | 'sentences' | 'paragraphs';
+    const result = generateLoremIpsum(mode, count);
+    editor.set({ json: result });
+    closeModal(); showToast('Lorem Ipsum generated');
+  });
+});
+
+// Number Base Converter
+document.getElementById('btn-numbase')!.addEventListener('click', () => {
+  openModal('Number Base Converter',
+    `<input id="tool-input" type="text" placeholder="Enter number (e.g. 255, 0xFF, 0b1010)" />
+     <div class="modal-radio-group">
+       <label><input type="radio" name="numbase" value="10" checked /> Decimal</label>
+       <label><input type="radio" name="numbase" value="16" /> Hex</label>
+       <label><input type="radio" name="numbase" value="2" /> Binary</label>
+       <label><input type="radio" name="numbase" value="8" /> Octal</label>
+     </div>`,
+    'Convert', () => {
+    const v = (document.getElementById('tool-input') as HTMLInputElement).value.trim();
+    if (!v) { showToast('Enter a number'); return; }
+    const base = parseInt((document.querySelector('input[name="numbase"]:checked') as HTMLInputElement).value);
+    try {
+      editor.set({ json: convertNumberBase(v, base) });
+      closeModal(); showToast('Number converted');
+    } catch (e) { showToast(e instanceof Error ? e.message : 'Error'); }
+  });
+});
+
+// Case Converter
+document.getElementById('btn-casecvt')!.addEventListener('click', () => {
+  openModal('Case Converter',
+    '<input id="tool-input" type="text" placeholder="Enter text (e.g. hello world, helloWorld, hello_world)" />',
+    'Convert', () => {
+    const v = (document.getElementById('tool-input') as HTMLInputElement).value.trim();
+    if (!v) { showToast('Enter text'); return; }
+    editor.set({ json: convertCase(v) });
+    closeModal(); showToast('Case converted');
+  });
+});
+
+// HTML Entity Encode/Decode
+document.getElementById('btn-htmlent')!.addEventListener('click', () => {
+  openModal('HTML Entity Encode / Decode',
+    `<textarea id="tool-input" placeholder="Enter text or HTML entities..." rows="4"></textarea>
+     <div class="modal-radio-group">
+       <label><input type="radio" name="htmldir" value="encode" checked /> Encode</label>
+       <label><input type="radio" name="htmldir" value="decode" /> Decode</label>
+     </div>`, 'Convert', () => {
+    const v = (document.getElementById('tool-input') as HTMLTextAreaElement).value;
+    if (!v) { showToast('Enter text'); return; }
+    const dir = (document.querySelector('input[name="htmldir"]:checked') as HTMLInputElement).value;
+    const result = dir === 'encode' ? htmlEntityEncode(v) : htmlEntityDecode(v);
+    editor.set({ json: { input: v, direction: dir, result } });
+    closeModal(); showToast(`HTML entities ${dir === 'encode' ? 'encoded' : 'decoded'}`);
+  });
+});
+
+// String Escape/Unescape
+document.getElementById('btn-strescape')!.addEventListener('click', () => {
+  openModal('String Escape / Unescape',
+    `<textarea id="tool-input" placeholder="Enter string to escape or unescape..." rows="4"></textarea>
+     <div class="modal-radio-group">
+       <label><input type="radio" name="escdir" value="escape" checked /> Escape</label>
+       <label><input type="radio" name="escdir" value="unescape" /> Unescape</label>
+     </div>`, 'Convert', () => {
+    const v = (document.getElementById('tool-input') as HTMLTextAreaElement).value;
+    if (!v) { showToast('Enter text'); return; }
+    const dir = (document.querySelector('input[name="escdir"]:checked') as HTMLInputElement).value;
+    const result = dir === 'escape' ? escapeString(v) : unescapeString(v);
+    editor.set({ json: result });
+    closeModal(); showToast(`String ${dir === 'escape' ? 'escaped' : 'unescaped'}`);
+  });
+});
+
+// Query String ↔ JSON
+document.getElementById('btn-querystr')!.addEventListener('click', () => {
+  openModal('Query String ↔ JSON',
+    `<textarea id="tool-input" placeholder="Query string (?foo=1&bar=2) or JSON ({&quot;foo&quot;:&quot;1&quot;})" rows="4"></textarea>
+     <div class="modal-radio-group">
+       <label><input type="radio" name="qsdir" value="qs-to-json" checked /> Query → JSON</label>
+       <label><input type="radio" name="qsdir" value="json-to-qs" /> JSON → Query</label>
+     </div>`, 'Convert', () => {
+    const v = (document.getElementById('tool-input') as HTMLTextAreaElement).value.trim();
+    if (!v) { showToast('Enter data'); return; }
+    const dir = (document.querySelector('input[name="qsdir"]:checked') as HTMLInputElement).value;
+    try {
+      const result = dir === 'qs-to-json' ? queryStringToJson(v) : jsonToQueryString(v);
+      editor.set({ json: result });
+      closeModal(); showToast('Converted');
+    } catch (e) { showToast(e instanceof Error ? e.message : 'Error'); }
   });
 });
 

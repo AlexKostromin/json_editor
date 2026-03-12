@@ -10,9 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <!-- SEO -->
-    <title>DevTools Online — JSON Editor, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color</title>
-    <meta name="description" content="Free online developer tools: JSON editor, JWT decoder, Base64, URL encode/decode, Unix Timestamp, UUID, YAML↔JSON, JSON Schema, SHA-256 Hash, Regex tester, Color converter, JSON Diff, Mock data. Everything runs in your browser." />
-    <meta name="keywords" content="dev tools online, json editor, json formatter, jwt decoder, base64 encode decode, url encode decode, unix timestamp converter, uuid generator, yaml to json, json schema generator, sha256 hash, regex tester, color converter hex rgb hsl, json diff, mock data, developer tools, online tools, devtools" />
+    <title>DevTools Online — JSON Editor, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Cron, Password</title>
+    <meta name="description" content="Free online developer tools: JSON editor, JWT decoder, Base64, URL encode/decode, Unix Timestamp, UUID, YAML↔JSON, JSON Schema, SHA-256 Hash, Regex tester, Color converter, JSON Diff, Mock data, Cron parser, Password generator, Lorem Ipsum, Number base converter, Case converter, HTML entities, String escape, Query string. Everything runs in your browser." />
+    <meta name="keywords" content="dev tools online, json editor, json formatter, jwt decoder, base64 encode decode, url encode decode, unix timestamp converter, uuid generator, yaml to json, json schema generator, sha256 hash, regex tester, color converter hex rgb hsl, json diff, mock data, cron expression parser, password generator, lorem ipsum generator, hex to decimal converter, case converter camelcase snake_case, html entity encoder decoder, string escape unescape, query string to json, developer tools, online tools, devtools" />
     <meta name="author" content="AlexKostromin" />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
     <meta name="googlebot" content="index, follow" />
@@ -37,19 +37,19 @@
     <!-- Open Graph (Facebook, Telegram, VK, Discord) -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://alexkostromin.github.io/json_editor/" />
-    <meta property="og:title" content="DevTools Online — 12 Free Developer Tools" />
-    <meta property="og:description" content="JSON Editor, JWT Decoder, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock — free in your browser." />
+    <meta property="og:title" content="DevTools Online — 20 Free Developer Tools" />
+    <meta property="og:description" content="JSON Editor, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock, Cron, Password, Lorem, Base Converter, Case, HTML Entity, Escape, Query String — free in your browser." />
     <meta property="og:image" content="https://alexkostromin.github.io/json_editor/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="DevTools Online — 12 free developer tools" />
+    <meta property="og:image:alt" content="DevTools Online — 20 free developer tools" />
     <meta property="og:site_name" content="DevTools Online" />
     <meta property="og:locale" content="en_US" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="DevTools Online — 12 Free Developer Tools" />
-    <meta name="twitter:description" content="JSON, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock — free in your browser." />
+    <meta name="twitter:title" content="DevTools Online — 20 Free Developer Tools" />
+    <meta name="twitter:description" content="JSON, JWT, Base64, URL, Timestamp, UUID, YAML, Hash, Regex, Color, Diff, Mock, Cron, Password, Lorem, Base, Case, Entity, Escape, Query — free in your browser." />
     <meta name="twitter:image" content="https://alexkostromin.github.io/json_editor/og-image.png" />
     <meta name="twitter:image:alt" content="DevTools Online" />
 
@@ -60,7 +60,7 @@
       "@type": "WebApplication",
       "name": "DevTools Online",
       "url": "https://alexkostromin.github.io/json_editor/",
-      "description": "12 free online developer tools: JSON editor, JWT decoder, Base64, URL, Timestamp, UUID, YAML, JSON Schema, Hash, Regex, Color, JSON Diff, Mock Data.",
+      "description": "20 free online developer tools: JSON editor, JWT decoder, Base64, URL, Timestamp, UUID, YAML, JSON Schema, Hash, Regex, Color, JSON Diff, Mock Data, Cron Parser, Password Generator, Lorem Ipsum, Number Base Converter, Case Converter, HTML Entity Encoder, String Escape, Query String Converter.",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Any",
       "offers": {
@@ -82,7 +82,15 @@
         "Regex tester",
         "Color converter HEX/RGB/HSL",
         "JSON Diff comparison",
-        "Mock data generator"
+        "Mock data generator",
+        "Cron expression parser",
+        "Password generator",
+        "Lorem Ipsum generator",
+        "Number base converter (HEX/DEC/OCT/BIN)",
+        "Case converter (camelCase, snake_case, kebab-case)",
+        "HTML entity encoder/decoder",
+        "String escape/unescape",
+        "Query string to JSON converter"
       ],
       "screenshot": "https://alexkostromin.github.io/json_editor/og-image.png",
       "inLanguage": "en",
@@ -201,7 +209,7 @@
     <div id="app"></div>
     <noscript>
       <h1>DevTools Online — Developer Tools</h1>
-      <p>12 free online tools: JSON editor, JWT decoder, Base64, URL, Timestamp, UUID, YAML, JSON Schema, Hash, Regex, Color, JSON Diff, Mock Data.</p>
+      <p>20 free online tools: JSON editor, JWT decoder, Base64, URL, Timestamp, UUID, YAML, JSON Schema, Hash, Regex, Color, JSON Diff, Mock Data, Cron Parser, Password Generator, Lorem Ipsum, Number Base Converter, Case Converter, HTML Entity, String Escape, Query String.</p>
       <p>All tools run in your browser — no data is sent to any server.</p>
       <p>JavaScript is required.</p>
 
@@ -243,12 +251,36 @@
 
       <h2>Mock Data Generator</h2>
       <p>Generate fake user data for testing.</p>
+
+      <h2>Cron Expression Parser</h2>
+      <p>Parse cron expressions into human-readable descriptions with next run times.</p>
+
+      <h2>Password Generator</h2>
+      <p>Generate secure random passwords with customizable length and character sets.</p>
+
+      <h2>Lorem Ipsum Generator</h2>
+      <p>Generate placeholder text by words, sentences, or paragraphs.</p>
+
+      <h2>Number Base Converter</h2>
+      <p>Convert numbers between decimal, hexadecimal, binary, and octal.</p>
+
+      <h2>Case Converter</h2>
+      <p>Convert text between camelCase, snake_case, kebab-case, PascalCase, and more.</p>
+
+      <h2>HTML Entity Encode / Decode</h2>
+      <p>Encode and decode HTML entities like &amp;amp; &amp;lt; &amp;gt; and more.</p>
+
+      <h2>String Escape / Unescape</h2>
+      <p>Escape and unescape strings for JSON, JavaScript, HTML, URL, and CSV.</p>
+
+      <h2>Query String ↔ JSON</h2>
+      <p>Convert between URL query strings and JSON objects.</p>
     </noscript>
 
     <!-- SEO content (visible to crawlers, hidden visually via CSS) -->
     <footer id="seo-footer" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
       <h2>DevTools Online — Free Developer Tools</h2>
-      <p>DevTools Online is a collection of 12 free online tools for web developers, backend engineers, DevOps and QA specialists. All tools run directly in your browser, no data is sent to any server. Can be installed as a PWA app for offline use.</p>
+      <p>DevTools Online is a collection of 20 free online tools for web developers, backend engineers, DevOps and QA specialists. All tools run directly in your browser, no data is sent to any server. Can be installed as a PWA app for offline use.</p>
 
       <h2>Online JSON Editor</h2>
       <p>Free JSON Editor Online with syntax highlighting, formatting, validation, and tree view. Supports tree, text, and table modes for working with JSON data of any size. Upload and download files, paste from clipboard.</p>
@@ -288,6 +320,30 @@
 
       <h2>Mock Data Generator — Fake Data</h2>
       <p>Fake data generator for testing. Create users with names, emails, phones, cities, companies, and other fields. Up to 100 records at once. Perfect for seed data, tests, and prototyping.</p>
+
+      <h2>Cron Expression Parser</h2>
+      <p>Online cron expression parser. Convert cron syntax like */5 * * * * into human-readable descriptions. Shows next 5 scheduled run times. Supports standard 5-field cron format. Essential for debugging crontab, Kubernetes CronJobs, and CI/CD schedules.</p>
+
+      <h2>Password Generator — Secure Random Passwords</h2>
+      <p>Cryptographically secure password generator using Web Crypto API. Customize length (4-128 chars), character sets (uppercase, lowercase, numbers, symbols). Generate up to 20 passwords at once with entropy calculation and strength indicator.</p>
+
+      <h2>Lorem Ipsum Generator — Placeholder Text</h2>
+      <p>Generate Lorem Ipsum placeholder text by words, sentences, or paragraphs. Perfect for mockups, wireframes, and design prototyping. Includes character and word count.</p>
+
+      <h2>Number Base Converter — HEX, DEC, OCT, BIN</h2>
+      <p>Online number base converter. Convert between decimal, hexadecimal, octal, and binary number systems. Supports 0x, 0b, 0o prefixes. Essential for low-level programming, networking, and embedded systems.</p>
+
+      <h2>Case Converter — camelCase, snake_case, kebab-case</h2>
+      <p>Online case converter. Transform text between camelCase, PascalCase, snake_case, SCREAMING_SNAKE_CASE, kebab-case, Title Case, dot.case and more. Essential for code refactoring and naming conventions.</p>
+
+      <h2>HTML Entity Encoder / Decoder</h2>
+      <p>Online HTML entity encoding and decoding. Convert special characters to HTML entities (&amp;amp; &amp;lt; &amp;gt; &amp;quot;) and back. Supports named entities and numeric character references. Essential for web development and XSS prevention.</p>
+
+      <h2>String Escape / Unescape</h2>
+      <p>Online string escape and unescape tool. Escape strings for JSON, JavaScript, HTML, URL, and CSV formats. Unescape encoded strings back to original text. Essential for debugging, API development, and data processing.</p>
+
+      <h2>Query String ↔ JSON Converter</h2>
+      <p>Online converter between URL query strings and JSON objects. Parse ?foo=1&bar=2 into structured JSON and vice versa. Supports duplicate keys as arrays. Essential for API debugging and URL parameter analysis.</p>
     </footer>
     <script type="module" src="/src/main.ts"></script>
   </body>

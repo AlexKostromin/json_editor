@@ -323,6 +323,294 @@ export function jsonDiff(json1Str: string, json2Str: string): Record<string, unk
   };
 }
 
+// ========== Cron Parser ==========
+const CRON_MONTHS = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const CRON_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+function describeCronField(field: string, unit: string, names?: string[]): string {
+  if (field === '*') return `every ${unit}`;
+  if (field.includes('/')) {
+    const [base, step] = field.split('/');
+    return base === '*' || base === '0' ? `every ${step} ${unit}s` : `every ${step} ${unit}s starting at ${unit} ${base}`;
+  }
+  if (field.includes('-')) {
+    const [from, to] = field.split('-');
+    const fromName = names ? names[parseInt(from)] || from : from;
+    const toName = names ? names[parseInt(to)] || to : to;
+    return `${fromName} through ${toName}`;
+  }
+  if (field.includes(',')) {
+    const parts = field.split(',').map(p => names ? names[parseInt(p)] || p : p);
+    return `at ${unit} ${parts.join(', ')}`;
+  }
+  return names ? (names[parseInt(field)] || field) : `${unit} ${field}`;
+}
+
+export function parseCron(expression: string): Record<string, unknown> {
+  const parts = expression.trim().split(/\s+/);
+  if (parts.length < 5 || parts.length > 6) throw new Error('Invalid cron: expected 5 or 6 fields (minute hour day month weekday)');
+
+  const [minute, hour, dayOfMonth, month, dayOfWeek] = parts;
+
+  const descriptions: string[] = [];
+
+  if (minute === '*' && hour === '*' && dayOfMonth === '*' && month === '*' && dayOfWeek === '*') {
+    descriptions.push('Every minute');
+  } else if (minute !== '*' && hour === '*' && dayOfMonth === '*' && month === '*' && dayOfWeek === '*') {
+    descriptions.push(describeCronField(minute, 'minute'));
+  } else {
+    if (minute !== '*') descriptions.push(describeCronField(minute, 'minute'));
+    if (hour !== '*') descriptions.push(describeCronField(hour, 'hour'));
+    if (dayOfMonth !== '*') descriptions.push(describeCronField(dayOfMonth, 'day'));
+    if (month !== '*') descriptions.push(describeCronField(month, 'month', CRON_MONTHS));
+    if (dayOfWeek !== '*') descriptions.push(describeCronField(dayOfWeek, 'weekday', CRON_DAYS));
+  }
+
+  // Calculate next 5 runs
+  const nextRuns: string[] = [];
+  const now = new Date();
+  const candidate = new Date(now);
+  candidate.setSeconds(0, 0);
+
+  for (let attempts = 0; attempts < 10000 && nextRuns.length < 5; attempts++) {
+    candidate.setMinutes(candidate.getMinutes() + 1);
+    const m = candidate.getMinutes(), h = candidate.getHours();
+    const dom = candidate.getDate(), mon = candidate.getMonth() + 1, dow = candidate.getDay();
+
+    if (!matchesCronField(minute, m)) continue;
+    if (!matchesCronField(hour, h)) continue;
+    if (!matchesCronField(dayOfMonth, dom)) continue;
+    if (!matchesCronField(month, mon)) continue;
+    if (!matchesCronField(dayOfWeek, dow)) continue;
+
+    nextRuns.push(candidate.toLocaleString('en-US'));
+  }
+
+  return {
+    expression: expression.trim(),
+    fields: { minute, hour, day_of_month: dayOfMonth, month, day_of_week: dayOfWeek },
+    description: descriptions.join(', '),
+    next_5_runs: nextRuns,
+  };
+}
+
+function matchesCronField(field: string, value: number): boolean {
+  if (field === '*') return true;
+  if (field.includes('/')) {
+    const [base, step] = field.split('/');
+    const start = base === '*' ? 0 : parseInt(base);
+    return (value - start) % parseInt(step) === 0 && value >= start;
+  }
+  if (field.includes(',')) return field.split(',').map(Number).includes(value);
+  if (field.includes('-')) {
+    const [from, to] = field.split('-').map(Number);
+    return value >= from && value <= to;
+  }
+  return parseInt(field) === value;
+}
+
+// ========== Password Generator ==========
+export function generatePasswords(length: number, count: number, options: { uppercase: boolean; lowercase: boolean; numbers: boolean; symbols: boolean }): Record<string, unknown> {
+  let chars = '';
+  if (options.lowercase) chars += 'abcdefghijklmnopqrstuvwxyz';
+  if (options.uppercase) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if (options.numbers) chars += '0123456789';
+  if (options.symbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+  if (!chars) throw new Error('Select at least one character type');
+
+  const passwords: string[] = [];
+  const array = new Uint32Array(length);
+  for (let i = 0; i < count; i++) {
+    crypto.getRandomValues(array);
+    let pw = '';
+    for (let j = 0; j < length; j++) {
+      pw += chars[array[j] % chars.length];
+    }
+    passwords.push(pw);
+  }
+
+  const entropy = Math.floor(length * Math.log2(chars.length));
+
+  return {
+    passwords,
+    count,
+    length,
+    character_set_size: chars.length,
+    entropy_bits: entropy,
+    strength: entropy < 40 ? 'Weak' : entropy < 60 ? 'Fair' : entropy < 80 ? 'Strong' : 'Very Strong',
+  };
+}
+
+// ========== Lorem Ipsum Generator ==========
+const LOREM_WORDS = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore', 'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud', 'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo', 'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate', 'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint', 'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia', 'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum', 'semper', 'ligula', 'nec', 'volutpat', 'maecenas', 'viverra', 'condimentum', 'pharetra', 'vestibulum', 'faucibus', 'orci', 'luctus', 'ultrices', 'posuere', 'cubilia', 'curae', 'donec', 'velit', 'justo', 'fringilla'];
+
+function generateLoremSentence(): string {
+  const len = 8 + Math.floor(Math.random() * 12);
+  const words: string[] = [];
+  for (let i = 0; i < len; i++) {
+    words.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)]);
+  }
+  words[0] = words[0][0].toUpperCase() + words[0].slice(1);
+  return words.join(' ') + '.';
+}
+
+function generateLoremParagraph(): string {
+  const count = 4 + Math.floor(Math.random() * 4);
+  const sentences: string[] = [];
+  for (let i = 0; i < count; i++) sentences.push(generateLoremSentence());
+  return sentences.join(' ');
+}
+
+export function generateLoremIpsum(mode: 'words' | 'sentences' | 'paragraphs', count: number): Record<string, unknown> {
+  let result: string;
+  if (mode === 'words') {
+    const words: string[] = [];
+    for (let i = 0; i < count; i++) words.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)]);
+    words[0] = words[0][0].toUpperCase() + words[0].slice(1);
+    result = words.join(' ') + '.';
+  } else if (mode === 'sentences') {
+    const sentences: string[] = [];
+    for (let i = 0; i < count; i++) sentences.push(generateLoremSentence());
+    result = sentences.join(' ');
+  } else {
+    const paragraphs: string[] = [];
+    for (let i = 0; i < count; i++) paragraphs.push(generateLoremParagraph());
+    result = paragraphs.join('\n\n');
+  }
+  return { mode, count, text: result, character_count: result.length, word_count: result.split(/\s+/).length };
+}
+
+// ========== Number Base Converter ==========
+export function convertNumberBase(input: string, fromBase: number): Record<string, unknown> {
+  const cleaned = input.trim().replace(/^0[xXbBoO]/, '');
+  const decimal = parseInt(cleaned, fromBase);
+  if (isNaN(decimal)) throw new Error(`Invalid number for base ${fromBase}`);
+
+  return {
+    input,
+    from_base: fromBase,
+    decimal: decimal,
+    binary: '0b' + decimal.toString(2),
+    octal: '0o' + decimal.toString(8),
+    hexadecimal: '0x' + decimal.toString(16).toUpperCase(),
+    binary_raw: decimal.toString(2),
+    octal_raw: decimal.toString(8),
+    hex_raw: decimal.toString(16).toUpperCase(),
+  };
+}
+
+// ========== Case Converter ==========
+export function convertCase(input: string): Record<string, string> {
+  const words = input
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/[_\-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .split(' ')
+    .filter(Boolean);
+
+  const lower = words.map(w => w.toLowerCase());
+
+  return {
+    input,
+    camelCase: lower[0] + lower.slice(1).map(w => w[0].toUpperCase() + w.slice(1)).join(''),
+    PascalCase: lower.map(w => w[0].toUpperCase() + w.slice(1)).join(''),
+    snake_case: lower.join('_'),
+    SCREAMING_SNAKE_CASE: lower.map(w => w.toUpperCase()).join('_'),
+    'kebab-case': lower.join('-'),
+    'SCREAMING-KEBAB-CASE': lower.map(w => w.toUpperCase()).join('-'),
+    'Title Case': lower.map(w => w[0].toUpperCase() + w.slice(1)).join(' '),
+    lowercase: lower.join(' '),
+    UPPERCASE: lower.map(w => w.toUpperCase()).join(' '),
+    'dot.case': lower.join('.'),
+  };
+}
+
+// ========== HTML Entity Encode/Decode ==========
+const HTML_ENTITIES: Record<string, string> = {
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  '\u00a0': '&nbsp;', '\u00a9': '&copy;', '\u00ae': '&reg;', '\u2122': '&trade;',
+  '\u2013': '&ndash;', '\u2014': '&mdash;', '\u2018': '&lsquo;', '\u2019': '&rsquo;',
+  '\u201c': '&ldquo;', '\u201d': '&rdquo;', '\u2026': '&hellip;', '\u00b7': '&middot;',
+};
+
+const HTML_DECODE_MAP: Record<string, string> = {};
+for (const [char, entity] of Object.entries(HTML_ENTITIES)) {
+  HTML_DECODE_MAP[entity] = char;
+}
+
+export function htmlEntityEncode(input: string): string {
+  return input.replace(/[&<>"'\u00a0\u00a9\u00ae\u2122\u2013\u2014\u2018\u2019\u201c\u201d\u2026\u00b7]/g, ch => HTML_ENTITIES[ch] || ch);
+}
+
+export function htmlEntityDecode(input: string): string {
+  return input
+    .replace(/&(?:amp|lt|gt|quot|#39|nbsp|copy|reg|trade|ndash|mdash|lsquo|rsquo|ldquo|rdquo|hellip|middot);/g, entity => HTML_DECODE_MAP[entity] || entity)
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(parseInt(code)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, code) => String.fromCharCode(parseInt(code, 16)));
+}
+
+// ========== String Escape/Unescape ==========
+export function escapeString(input: string): Record<string, string> {
+  return {
+    input,
+    json: JSON.stringify(input),
+    javascript: input.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t'),
+    html: input.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'),
+    url: encodeURIComponent(input),
+    csv: `"${input.replace(/"/g, '""')}"`,
+  };
+}
+
+export function unescapeString(input: string): Record<string, string> {
+  let jsonResult = input;
+  try { jsonResult = JSON.parse(input); } catch { /* not valid JSON string */ }
+
+  const jsResult = input.replace(/\\n/g, '\n').replace(/\\r/g, '\r').replace(/\\t/g, '\t').replace(/\\'/g, "'").replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+
+  return {
+    input,
+    json_unescaped: jsonResult,
+    js_unescaped: jsResult,
+    html_unescaped: input.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'"),
+    url_decoded: decodeURIComponent(input.replace(/\+/g, ' ')),
+  };
+}
+
+// ========== Query String ↔ JSON ==========
+export function queryStringToJson(qs: string): Record<string, unknown> {
+  const cleaned = qs.trim().replace(/^\?/, '');
+  const params: Record<string, string | string[]> = {};
+  for (const pair of cleaned.split('&')) {
+    if (!pair) continue;
+    const [key, ...rest] = pair.split('=');
+    const decodedKey = decodeURIComponent(key);
+    const decodedValue = decodeURIComponent(rest.join('='));
+    if (decodedKey in params) {
+      const existing = params[decodedKey];
+      if (Array.isArray(existing)) existing.push(decodedValue);
+      else params[decodedKey] = [existing, decodedValue];
+    } else {
+      params[decodedKey] = decodedValue;
+    }
+  }
+  return { query_string: qs.trim(), json: params, param_count: Object.keys(params).length };
+}
+
+export function jsonToQueryString(jsonStr: string): Record<string, string> {
+  const obj = JSON.parse(jsonStr);
+  const parts: string[] = [];
+  for (const [key, value] of Object.entries(obj)) {
+    if (Array.isArray(value)) {
+      for (const v of value) parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(v))}`);
+    } else {
+      parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`);
+    }
+  }
+  const qs = parts.join('&');
+  return { json: jsonStr, query_string: qs, full_url_example: `https://example.com/?${qs}` };
+}
+
 // ========== Mock Data Generator ==========
 const firstNames = ['James', 'Mary', 'John', 'Sarah', 'Robert', 'Emma', 'Michael', 'Olivia', 'William', 'Emily', 'David', 'Jessica', 'Daniel', 'Sophie', 'Thomas'];
 const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris'];
