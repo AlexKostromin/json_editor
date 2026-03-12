@@ -408,7 +408,6 @@ header.innerHTML = `
     <div class="header-badge">Online</div>
   </div>
   <div class="header-right-section">
-    <button class="home-btn" id="btn-home">&#8962;</button>
     <button class="lang-btn" id="lang-switch">${lang.toUpperCase()}</button>
     <label class="theme-btn" title="Toggle theme">
       <input type="checkbox" id="theme-switch" />
@@ -460,6 +459,11 @@ app.appendChild(toolsHome);
 const toolbar = document.createElement('div');
 toolbar.className = 'toolbar';
 toolbar.innerHTML = `
+  <button class="btn home-btn" id="btn-home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span class="btn-label">Home</span>
+  </button>
+  <div class="divider"></div>
   <div class="btn-group">
     <button class="btn btn-primary" id="btn-format" data-tooltip="Format JSON">
       ${icons.format}<span class="btn-label">Format</span>
@@ -573,18 +577,19 @@ function showHome() {
   toolsHome.style.display = '';
   toolbar.style.display = 'none';
   editorWrapper.style.display = 'none';
-  document.getElementById('btn-home')!.style.display = 'none';
 }
 
 function showEditor() {
   toolsHome.style.display = 'none';
   toolbar.style.display = '';
   editorWrapper.style.display = '';
-  document.getElementById('btn-home')!.style.display = '';
 }
 
 document.getElementById('btn-home')!.addEventListener('click', showHome);
-document.getElementById('btn-home')!.style.display = 'none';
+
+// Click on logo → go home
+document.querySelector('.header-left')!.addEventListener('click', showHome);
+(document.querySelector('.header-left') as HTMLElement).style.cursor = 'pointer';
 
 // ========== Footer ==========
 const footer = document.createElement('footer');
