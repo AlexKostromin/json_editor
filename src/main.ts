@@ -195,11 +195,18 @@ footer.innerHTML = `
 `;
 app.appendChild(footer);
 
-// Global visit counter via counterapi.dev
+// Global visit counter via counterapi.dev — increment once, then poll for updates
+const visitCountEl = document.getElementById('visit-count')!;
 fetch('https://api.counterapi.dev/v1/devtools-online/visits/up')
   .then(r => r.json())
-  .then(data => { document.getElementById('visit-count')!.textContent = String(data.count); })
-  .catch(() => { document.getElementById('visit-count')!.textContent = '—'; });
+  .then(data => { visitCountEl.textContent = String(data.count); })
+  .catch(() => { visitCountEl.textContent = '—'; });
+setInterval(() => {
+  fetch('https://api.counterapi.dev/v1/devtools-online/visits/')
+    .then(r => r.json())
+    .then(data => { visitCountEl.textContent = String(data.count); })
+    .catch(() => {});
+}, 10000);
 
 // ========== Sample data ==========
 const sampleJson = {
